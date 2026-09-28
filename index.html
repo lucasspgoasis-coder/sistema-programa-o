@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programação de Limpeza — Fazenda Oásis</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas for JPEG export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b132b;
+            color: #f8fafc;
+        }
+
+        /* Container do Card para Exportação */
+        .preview-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        /* Badges de Frequência de Limpeza */
+        .badge-freq-diaria {
+            background-color: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        .badge-freq-semanal {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+
+        .badge-freq-mensal {
+            background-color: #faf5ff;
+            color: #6b21a8;
+            border: 1px solid #e9d5ff;
+        }
+
+        /* Tag de Colaboradores */
+        .collaborator-tag {
+            background-color: #ffffff;
+            color: #334155;
+            font-weight: 600;
+            font-size: 0.72rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Badges de Status Operacional */
+        .status-badge-pendente {
+            background-color: #fff7ed;
+            color: #c2410c;
+            border: 1px solid #ffedd5;
+        }
+
+        .status-badge-andamento {
+            background-color: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+
+        .status-badge-concluido {
+            background-color: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Scrollbars elegantes */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 pb-12">
+
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 shadow-xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-emerald-600 to-teal-400 text-slate-950 p-2.5 rounded-xl font-bold shadow-lg shadow-emerald-900/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                        Fazenda Oásis
+                        <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold px-2 py-0.5 rounded-md">Gestão de Limpeza</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Cronograma Classificado por Frequências: Diária, Semanal e Mensal</p>
+                </div>
+            </div>
+
+            <!-- Botões de Ação Principal -->
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="loadSampleData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Modelo Padrão
+                </button>
+                <button onclick="loadCleaningRoutine()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Rotina Completa
+                </button>
+                <button onclick="downloadAsJPEG()" id="btn-export" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-bold rounded-lg shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span>Baixar em JPEG</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1450px] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- PAINEL DE CONTROLE E FORMULÁRIO DE EDIÇÃO (4 colunas) -->
+        <section class="lg:col-span-4 space-y-6 bg-slate-900/95 border border-slate-800 p-5 rounded-2xl h-fit shadow-xl">
+            <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Dados da Programação
+                </h2>
+                <span class="text-xs bg-teal-500/10 text-teal-300 px-2 py-0.5 rounded border border-teal-500/20 font-semibold">Oásis Sanidade</span>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1">Título Principal do Banner</label>
+                    <input type="text" id="input-title" value="PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Semana (SEM.)</label>
+                        <input type="text" id="input-week" value="40" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Data da Operação</label>
+                        <input type="text" id="input-date" value="28/09/2026" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1">Rodapé / Unidade Responsável</label>
+                    <input type="text" id="input-footer" value="FAZENDA OÁSIS — SETOR DE HIGIENIZAÇÃO & CONTROLE AMBIENTAL" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                        <span>Tarefas de Limpeza</span>
+                        <span id="task-count-badge" class="bg-slate-800 text-teal-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+                    </h3>
+                    <button onclick="addTaskRow()" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg hover:bg-emerald-500/20 font-bold transition flex items-center gap-1">
+                        + Nova Atividade
+                    </button>
+                </div>
+
+                <div id="tasks-editor-list" class="space-y-4 max-h-[520px] overflow-y-auto pr-1">
+                    <!-- Gerado Dinamicamente via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- PAINEL DE PREVISÃO DO CARD / EXPORTAÇÃO (8 colunas) -->
+        <section class="lg:col-span-8 space-y-4">
+            
+            <div class="flex items-center justify-between text-slate-300 text-xs px-1">
+                <span class="flex items-center gap-2 font-medium">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Modelo de Visualização em Alta Resolução (Será exportado exatamente como exibido)
+                </span>
+                <span class="text-slate-500 font-semibold">Formato JPEG HD</span>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl shadow-2xl border border-slate-800 bg-slate-950 p-2 md:p-4">
+                
+                <!-- CONTAINER PRINCIPAL CAPTURADO PELO HTML2CANVAS -->
+                <div id="schedule-card" class="preview-container p-6 md:p-8 rounded-2xl space-y-5 text-slate-800 min-w-[940px]">
+                    
+                    <!-- BANNER SUPERIOR DE CABEÇALHO (DESIGN NOVO E EXCLUSIVO) -->
+                    <div class="bg-slate-900 rounded-2xl p-6 shadow-md border border-slate-800 text-white relative overflow-hidden">
+                        <!-- Elemento decorativo de fundo -->
+                        <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute right-32 -top-10 w-32 h-32 bg-teal-500/10 rounded-full blur-xl pointer-events-none"></div>
+
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 border border-emerald-500/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    Sanidade & Higienização Agrícola
+                                </div>
+                                <h1 id="card-display-title" class="text-2xl md:text-3xl font-black text-white tracking-wide uppercase leading-tight">
+                                    PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO
+                                </h1>
+                                <p class="text-slate-400 text-xs font-semibold mt-1">
+                                    FAZENDA OÁSIS — PLANO OPERACIONAL DE LIMPEZA
+                                </p>
+                            </div>
+
+                            <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-right shrink-0">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">PERÍODO / DATA</div>
+                                <div class="text-sm font-extrabold text-teal-300 mt-0.5">
+                                    SEM. <span id="card-display-week">40</span> • <span id="card-display-date">28/09/2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DASHBOARD DE MÉTRICAS E INDICADORES (KPIs) -->
+                    <div class="grid grid-cols-5 gap-3">
+                        
+                        <!-- KPI 1: TOTAL DE TAREFAS -->
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div id="kpi-total" class="text-xl font-black text-slate-900 leading-none">0</div>
+                                <div class="text-[10px] font-bold text-slate-600 uppercase tracking-tight mt-1">TOTAL TAREFAS</div>
+                                <div class="text-[9px] text-slate-400 leading-none">Programadas</div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 2: LIMPEZA DIÁRIA -->
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-emerald-100 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-black text-xs">
+                                DIA
+                            </div>
+                            <div>
+                                <div id="kpi-diaria" class="text-xl font-black text-emerald-700 leading-none">0</div>
+                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA DIÁRIA</div>
+                                <div id="kpi-diaria-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 3: LIMPEZA SEMANAL -->
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-blue-100 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-black text-xs">
+                                SEM
+                            </div>
+                            <div>
+                                <div id="kpi-semanal" class="text-xl font-black text-blue-700 leading-none">0</div>
+                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA SEMANAL</div>
+                                <div id="kpi-semanal-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 4: LIMPEZA MENSAL -->
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-purple-100 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-black text-xs">
+                                MES
+                            </div>
+                            <div>
+                                <div id="kpi-mensal" class="text-xl font-black text-purple-700 leading-none">0</div>
+                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA MENSAL</div>
+                                <div id="kpi-mensal-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 5: PROGRESSO GERAL DE CONCLUSÃO -->
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="w-full">
+                                <div id="kpi-conclusao-pct" class="text-xl font-black text-slate-900 leading-none">0%</div>
+                                <div class="text-[10px] font-bold text-slate-600 uppercase tracking-tight mt-1">CONCLUÍDAS</div>
+                                <!-- Barra de Progresso Visual -->
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 mt-1.5 overflow-hidden">
+                                    <div id="kpi-progress-bar" class="bg-emerald-500 h-1.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- TABELA DE ATIVIDADES CLASSIFICADAS POR FREQUÊNCIA E EQUIPE -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        
+                        <!-- Header da Tabela (Novo visual limpo e elegante) -->
+                        <div class="bg-slate-800 text-slate-200 px-6 py-3.5 grid grid-cols-12 gap-4 text-[11px] font-extrabold tracking-wider uppercase border-b border-slate-700">
+                            <div class="col-span-3">FREQUÊNCIA & EQUIPE</div>
+                            <div class="col-span-4">COLABORADORES DESIGNADOS</div>
+                            <div class="col-span-3">SERVIÇO DE LIMPEZA & LOCAL</div>
+                            <div class="col-span-2 text-center">STATUS</div>
+                        </div>
+
+                        <!-- Corpo da Tabela -->
+                        <div id="table-body" class="divide-y divide-slate-100">
+                            <!-- Gerado Dinamicamente -->
+                        </div>
+
+                    </div>
+
+                    <!-- RODAPÉ COMPACTO DO CARD -->
+                    <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center justify-between px-6">
+                        <div class="flex items-center gap-2 text-slate-500 text-xs font-bold">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span id="card-display-footer">FAZENDA OÁSIS — HIGIENIZAÇÃO & CONTROLE AMBIENTAL</span>
+                        </div>
+                        <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+                            Documento Operacional
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ESTADO INICIAL DA APLICAÇÃO */
+        let tasks = [];
+
+        // Cores de fundo para os avatares das equipes
+        const avatarColors = [
+            { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-200' },
+            { bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-200' },
+            { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-200' },
+            { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200' },
+            { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-200' },
+            { bg: 'bg-indigo-100', text: 'text-indigo-800', border: 'border-indigo-200' }
+        ];
+
+        /* CARREGAR MODELO PADRÃO COM A NOVA CLASSIFICAÇÃO */
+        function loadSampleData() {
+            document.getElementById('input-title').value = "PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO";
+            document.getElementById('input-week').value = "40";
+            document.getElementById('input-date').value = "28/09/2026";
+            document.getElementById('input-footer').value = "FAZENDA OÁSIS — HIGIENIZAÇÃO & CONTROLE AMBIENTAL";
+
+            tasks = [
+                {
+                    id: 1,
+                    frequency: "DIÁRIA",
+                    initials: "EQ1",
+                    colorIndex: 0,
+                    collaborators: ["Jucivan Xavier", "Jonas de Sousa", "Isaac de Oliveira"],
+                    serviceName: "Lavagem e sanitização dos galpões de colheita e bancadas",
+                    block: "GALPÃO PRINCIPAL",
+                    status: "EM ANDAMENTO"
+                },
+                {
+                    id: 2,
+                    frequency: "DIÁRIA",
+                    initials: "EQ2",
+                    colorIndex: 1,
+                    collaborators: ["Manoel Messias", "Kauan Xavier", "João Batista"],
+                    serviceName: "Higienização diária de caixas plásticas e utensílios",
+                    block: "SETOR DE EMBALAGEM",
+                    status: "CONCLUÍDO"
+                },
+                {
+                    id: 3,
+                    frequency: "SEMANAL",
+                    initials: "EQ3",
+                    colorIndex: 2,
+                    collaborators: ["Eduardo Souza", "Antonio Adriano", "Janiel Lopes"],
+                    serviceName: "Limpeza das bordas, roçagem e capina dos canteiros",
+                    block: "BLOCO- 08 e BLOCO- 09",
+                    status: "PENDENTE"
+                },
+                {
+                    id: 4,
+                    frequency: "SEMANAL",
+                    initials: "EQ1",
+                    colorIndex: 0,
+                    collaborators: ["Pedro Henrique", "Marcos de Lima"],
+                    serviceName: "Desobststrução e limpeza de calhas e canais de drenagem",
+                    block: "ESTUFAS 01 A 04",
+                    status: "EM ANDAMENTO"
+                },
+                {
+                    id: 5,
+                    frequency: "MENSAL",
+                    initials: "EQ4",
+                    colorIndex: 3,
+                    collaborators: ["Mateus Lopes", "Jucivan Xavier", "Manoel Messias"],
+                    serviceName: "Desinfecção profunda de reservatórios, filtros de irrigação e depósitos",
+                    block: "SETOR DE IRRIGAÇÃO",
+                    status: "PENDENTE"
+                }
+            ];
+
+            updateAll();
+        }
+
+        /* CARREGAR ROTINA COMPLETA DE LIMPEZA */
+        function loadCleaningRoutine() {
+            document.getElementById('input-title').value = "CRONOGRAMA GERAL DE LIMPEZA E SANIDADE";
+            document.getElementById('input-week').value = "41";
+            document.getElementById('input-date').value = "05/10/2026";
+            document.getElementById('input-footer').value = "FAZENDA OÁSIS — UNIDADE OPERACIONAL SPG";
+
+            tasks = [
+                {
+                    id: 1,
+                    frequency: "DIÁRIA",
+                    initials: "EQ1",
+                    colorIndex: 0,
+                    collaborators: ["Jucivan Xavier", "Pedro Henrique"],
+                    serviceName: "Recolhimento diário de resíduos e limpeza da recepção de frutas",
+                    block: "ÁREA DE RECEBIMENTO",
+                    status: "CONCLUÍDO"
+                },
+                {
+                    id: 2,
+                    frequency: "DIÁRIA",
+                    initials: "EQ2",
+                    colorIndex: 1,
+                    collaborators: ["Jonas de Sousa", "Janiel Lopes"],
+                    serviceName: "Varreção e lavagem com sabão neutro das câmaras frias",
+                    block: "CÂMARA FRIA 01 E 02",
+                    status: "EM ANDAMENTO"
+                },
+                {
+                    id: 3,
+                    frequency: "SEMANAL",
+                    initials: "EQ3",
+                    colorIndex: 2,
+                    collaborators: ["Manoel Messias", "Kauan Xavier", "Marcos de Lima"],
+                    serviceName: "Limpeza de telas anti-insetos e estruturas laterais",
+                    block: "ESTUFA 03",
+                    status: "PENDENTE"
+                },
+                {
+                    id: 4,
+                    frequency: "SEMANAL",
+                    initials: "EQ4",
+                    colorIndex: 3,
+                    collaborators: ["Eduardo Souza", "Antonio Adriano"],
+                    serviceName: "Organização e higienização do depósito de fertilizantes",
+                    block: "DEPÓSITO CENTRAL",
+                    status: "PENDENTE"
+                },
+                {
+                    id: 5,
+                    frequency: "MENSAL",
+                    initials: "EQ1",
+                    colorIndex: 0,
+                    collaborators: ["Isaac de Oliveira", "Mateus Lopes"],
+                    serviceName: "Lavagem e sanitização completa de tratores e carretas de colheita",
+                    block: "PATIÔ DE MÁQUINAS",
+                    status: "PENDENTE"
+                },
+                {
+                    id: 6,
+                    frequency: "MENSAL",
+                    initials: "EQ2",
+                    colorIndex: 1,
+                    collaborators: ["Jucivan Xavier", "Manoel Messias"],
+                    serviceName: "Limpeza e pulverização sanitizante dos silos de armazenamento",
+                    block: "SETOR DE SILOS",
+                    status: "PENDENTE"
+                }
+            ];
+
+            updateAll();
+        }
+
+        /* ADICIONAR NOVA LINHA DE TAREFA */
+        function addTaskRow() {
+            const newId = Date.now();
+            tasks.push({
+                id: newId,
+                frequency: "DIÁRIA",
+                initials: "EQ",
+                colorIndex: Math.floor(Math.random() * avatarColors.length),
+                collaborators: ["Novo Colaborador"],
+                serviceName: "Nova atividade de limpeza",
+                block: "SETOR 01",
+                status: "PENDENTE"
+            });
+            updateAll();
+        }
+
+        /* REMOVER TAREFA */
+        function removeTaskRow(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            updateAll();
+        }
+
+        /* ATUALIZAR CAMPO DE TAREFA */
+        function updateTaskField(id, field, value) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            if (field === 'collaborators') {
+                task.collaborators = value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            } else {
+                task[field] = value;
+            }
+
+            updateAll();
+        }
+
+        /* CALCULAR E ATUALIZAR METRICAS (KPIS) */
+        function updateKPIs() {
+            const total = tasks.length;
+            const diarias = tasks.filter(t => t.frequency === 'DIÁRIA').length;
+            const semanais = tasks.filter(t => t.frequency === 'SEMANAL').length;
+            const mensais = tasks.filter(t => t.frequency === 'MENSAL').length;
+            const concluidas = tasks.filter(t => t.status === 'CONCLUÍDO').length;
+
+            document.getElementById('kpi-total').innerText = total;
+            document.getElementById('kpi-diaria').innerText = diarias;
+            document.getElementById('kpi-semanal').innerText = semanais;
+            document.getElementById('kpi-mensal').innerText = mensais;
+
+            const pctDiaria = total > 0 ? Math.round((diarias / total) * 100) : 0;
+            const pctSemanal = total > 0 ? Math.round((semanais / total) * 100) : 0;
+            const pctMensal = total > 0 ? Math.round((mensais / total) * 100) : 0;
+            const pctConclusao = total > 0 ? Math.round((concluidas / total) * 100) : 0;
+
+            document.getElementById('kpi-diaria-pct').innerText = `${pctDiaria}% do total`;
+            document.getElementById('kpi-semanal-pct').innerText = `${pctSemanal}% do total`;
+            document.getElementById('kpi-mensal-pct').innerText = `${pctMensal}% do total`;
+            
+            document.getElementById('kpi-conclusao-pct').innerText = `${pctConclusao}%`;
+            document.getElementById('kpi-progress-bar').style.width = `${pctConclusao}%`;
+
+            document.getElementById('task-count-badge').innerText = total;
+        }
+
+        /* SINCRONIZAR CABEÇALHOS DO CARD */
+        function syncHeaderInputs() {
+            document.getElementById('card-display-title').innerText = document.getElementById('input-title').value || "PROGRAMAÇÃO DE LIMPEZA";
+            document.getElementById('card-display-week').innerText = document.getElementById('input-week').value || "00";
+            document.getElementById('card-display-date').innerText = document.getElementById('input-date').value || "--/--/----";
+            document.getElementById('card-display-footer').innerText = document.getElementById('input-footer').value || "FAZENDA OÁSIS";
+        }
+
+        /* RENDERIZAR EDITOR LATERAL */
+        function renderEditor() {
+            const container = document.getElementById('tasks-editor-list');
+            container.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-3 relative shadow-sm";
+                
+                card.innerHTML = `
+                    <div class="flex items-center justify-between text-xs font-bold text-teal-400 border-b border-slate-800 pb-2">
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+                            Item #${index + 1}
+                        </span>
+                        <button onclick="removeTaskRow(${task.id})" class="text-rose-400 hover:text-rose-300 text-[11px] font-semibold bg-rose-500/10 px-2.5 py-0.5 rounded border border-rose-500/20 transition">
+                            Excluir
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Frequência</label>
+                            <select onchange="updateTaskField(${task.id}, 'frequency', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-white font-bold focus:outline-none focus:border-teal-500 text-xs">
+                                <option value="DIÁRIA" ${task.frequency === 'DIÁRIA' ? 'selected' : ''}>LIMPEZA DIÁRIA</option>
+                                <option value="SEMANAL" ${task.frequency === 'SEMANAL' ? 'selected' : ''}>LIMPEZA SEMANAL</option>
+                                <option value="MENSAL" ${task.frequency === 'MENSAL' ? 'selected' : ''}>LIMPEZA MENSAL</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Status</label>
+                            <select onchange="updateTaskField(${task.id}, 'status', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-white font-bold focus:outline-none focus:border-teal-500 text-xs">
+                                <option value="PENDENTE" ${task.status === 'PENDENTE' ? 'selected' : ''}>PENDENTE</option>
+                                <option value="EM ANDAMENTO" ${task.status === 'EM ANDAMENTO' ? 'selected' : ''}>EM ANDAMENTO</option>
+                                <option value="CONCLUÍDO" ${task.status === 'CONCLUÍDO' ? 'selected' : ''}>CONCLUÍDO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Iniciais Equipe</label>
+                            <input type="text" value="${task.initials}" oninput="updateTaskField(${task.id}, 'initials', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white uppercase text-center font-extrabold focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-semibold mb-1">Bloco / Setor / Local</label>
+                            <input type="text" value="${task.block}" oninput="updateTaskField(${task.id}, 'block', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white focus:outline-none focus:border-teal-500">
+                        </div>
+                    </div>
+
+                    <div class="text-xs">
+                        <label class="block text-slate-400 font-semibold mb-1">Serviço de Limpeza</label>
+                        <textarea oninput="updateTaskField(${task.id}, 'serviceName', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-teal-500" rows="2">${task.serviceName}</textarea>
+                    </div>
+
+                    <div class="text-xs">
+                        <label class="block text-slate-400 font-semibold mb-1">Colaboradores (Separados por vírgula)</label>
+                        <input type="text" value="${task.collaborators.join(', ')}" onchange="updateTaskField(${task.id}, 'collaborators', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white text-xs focus:outline-none focus:border-teal-500" placeholder="Ex: João, Maria, Pedro">
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        /* RENDERIZAR TABELA NO CARD PREVIEW */
+        function renderTable() {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = '';
+
+            tasks.forEach((task) => {
+                const row = document.createElement('div');
+                row.className = "px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-slate-50/80 transition";
+
+                // Badges de Colaboradores
+                const collabBadges = task.collaborators.map(c => `<span class="collaborator-tag">${c}</span>`).join(' ');
+
+                // Estilos do Badge de Frequência
+                let freqClass = "badge-freq-diaria";
+                if (task.frequency === "SEMANAL") freqClass = "badge-freq-semanal";
+                if (task.frequency === "MENSAL") freqClass = "badge-freq-mensal";
+
+                // Estilos do Badge de Status
+                let statusClass = "status-badge-pendente";
+                if (task.status === "EM ANDAMENTO") statusClass = "status-badge-andamento";
+                if (task.status === "CONCLUÍDO") statusClass = "status-badge-concluido";
+
+                // Tema do Avatar
+                const colorTheme = avatarColors[task.colorIndex % avatarColors.length];
+
+                row.innerHTML = `
+                    <!-- Coluna 1: Frequência & Equipe -->
+                    <div class="col-span-3 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl ${colorTheme.bg} ${colorTheme.text} ${colorTheme.border} font-black text-xs flex items-center justify-center shrink-0 shadow-sm border">
+                            ${task.initials || 'EQ'}
+                        </div>
+                        <div class="space-y-1">
+                            <div>
+                                <span class="inline-block ${freqClass} font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                    ${task.frequency || 'DIÁRIA'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 2: Colaboradores Designados -->
+                    <div class="col-span-4 flex flex-wrap gap-1.5">
+                        ${collabBadges}
+                    </div>
+
+                    <!-- Coluna 3: Serviço Planejado + Local -->
+                    <div class="col-span-3 space-y-1">
+                        <div class="font-bold text-slate-900 text-xs leading-snug">
+                            ${task.serviceName}
+                        </div>
+                        <div>
+                            <span class="inline-block bg-slate-100 text-slate-600 font-extrabold text-[9px] px-2 py-0.5 rounded uppercase tracking-wider border border-slate-200">
+                                ${task.block || 'GERAL'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 4: Status -->
+                    <div class="col-span-2 text-center">
+                        <span class="inline-block ${statusClass} font-extrabold text-[10px] px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                            ${task.status}
+                        </span>
+                    </div>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function updateAll() {
+            syncHeaderInputs();
+            renderEditor();
+            renderTable();
+            updateKPIs();
+        }
+
+        /* EXPORTAÇÃO EM IMAGEM JPEG HD */
+        function downloadAsJPEG() {
+            const btn = document.getElementById('btn-export');
+            const originalText = btn.innerHTML;
+            
+            // Alterar estado do botão durante processamento
+            btn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Gerando JPEG...</span>
+            `;
+            btn.disabled = true;
+
+            const element = document.getElementById('schedule-card');
+
+            // Configurações do html2canvas para máxima clareza
+            const options = {
+                scale: 2, // Resolução HD de captura
+                backgroundColor: "#f1f5f9",
+                useCORS: true,
+                logging: false,
+                scrollX: 0,
+                scrollY: 0
+            };
+
+            setTimeout(() => {
+                html2canvas(element, options).then(canvas => {
+                    const imageData = canvas.toDataURL("image/jpeg", 0.95);
+                    
+                    const link = document.createElement('a');
+                    const dateStr = document.getElementById('input-date').value.replace(/\//g, '-');
+                    link.download = `Programacao_Limpeza_Fazenda_Oasis_${dateStr}.jpg`;
+                    link.href = imageData;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }).catch(err => {
+                    console.error("Erro ao gerar imagem:", err);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
+            }, 250);
+        }
+
+        /* CARREGAR APLICAÇÃO AO INICIALIZAR */
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('input-title').addEventListener('input', syncHeaderInputs);
+            document.getElementById('input-week').addEventListener('input', syncHeaderInputs);
+            document.getElementById('input-date').addEventListener('input', syncHeaderInputs);
+            document.getElementById('input-footer').addEventListener('input', syncHeaderInputs);
+
+            loadSampleData();
+        });
+    </script>
+</body>
+</html>

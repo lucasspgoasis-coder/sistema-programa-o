@@ -528,7 +528,9 @@
                 task[field] = value;
             }
 
-            updateAll();
+            // Atualiza apenas a tabela e os KPIs em tempo real para nao perder o foco da digitacao no input
+            renderTable();
+            updateKPIs();
         }
 
         /* CALCULAR E ATUALIZAR METRICAS (KPIS) */
@@ -624,7 +626,7 @@
 
                     <div class="text-xs">
                         <label class="block text-slate-400 font-semibold mb-1">Colaboradores (Separados por vírgula)</label>
-                        <input type="text" value="${task.collaborators.join(', ')}" onchange="updateTaskField(${task.id}, 'collaborators', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white text-xs focus:outline-none focus:border-teal-500" placeholder="Ex: João, Maria, Pedro">
+                        <input type="text" value="${task.collaborators.join(', ')}" oninput="updateTaskField(${task.id}, 'collaborators', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white text-xs focus:outline-none focus:border-teal-500" placeholder="Ex: João, Maria, Pedro">
                     </div>
                 `;
 

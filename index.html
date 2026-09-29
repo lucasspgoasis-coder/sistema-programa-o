@@ -490,7 +490,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         /* ESTADO INICIAL DA APLICAÇÃO */
         let tasks = [];
@@ -532,6 +532,8 @@
             document.getElementById('input-week').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
             document.getElementById('input-date').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
             document.getElementById('input-footer').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
+            
+            window.checkSavedLogin();
         };
 
         try {
@@ -557,8 +559,7 @@
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         userId = user.uid;
-                        await window.loadDataFromCloud();
-                        isDataLoaded = true;
+                        window.loadDataFromCloud();
                     }
                 });
 
@@ -572,6 +573,19 @@
         }
 
         /* LOGICA DE LOGIN E ROLES */
+        window.checkSavedLogin = function() {
+            try {
+                const savedRole = localStorage.getItem('fazendaOasisRole');
+                if (savedRole === 'admin' || savedRole === 'colaborador') {
+                    currentUserRole = savedRole;
+                    document.getElementById('login-screen').classList.add('hidden');
+                    window.applyRoleRestrictions();
+                }
+            } catch(e) {
+                console.warn("LocalStorage indisponível");
+            }
+        };
+
         window.selectRole = function(role) {
             if (role === 'admin') {
                 document.getElementById('role-selection').classList.add('hidden');
@@ -594,6 +608,7 @@
                 
                 if (user === 'adm123' && pass === 'lucas@2026') {
                     currentUserRole = 'admin';
+                    try { localStorage.setItem('fazendaOasisRole', 'admin'); } catch(e) {}
                     document.getElementById('login-screen').classList.add('hidden');
                     window.applyRoleRestrictions();
                 } else {
@@ -601,6 +616,7 @@
                 }
             } else if (role === 'colaborador') {
                 currentUserRole = 'colaborador';
+                try { localStorage.setItem('fazendaOasisRole', 'colaborador'); } catch(e) {}
                 document.getElementById('login-screen').classList.add('hidden');
                 window.applyRoleRestrictions();
             }
@@ -669,70 +685,110 @@
             }, 800);
         };
 
-        /* FUNÇÃO PARA CARREGAR DA NUVEM */
+        /* FUNÇÃO PARA CARREGAR DA NUVEM COM ATUALIZAÇÃO EM TEMPO REAL */
         window.loadDataFromCloud = async function() {
             if (!db || !userId) return;
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
-                const docSnap = await getDoc(docRef);
                 
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('input-title').value = data.title || "";
-                    document.getElementById('input-week').value = data.week || "";
-                    document.getElementById('input-date').value = data.date || "";
-                    document.getElementById('input-footer').value = data.footer || "";
-                    window.lastResetWeek = data.lastResetWeek || 0;
-                    
-                    if (data.tasks && Array.isArray(data.tasks) && data.tasks.length > 0) {
-                        tasks = data.tasks;
-                    }
-                    
-                    // Rotina de reset automático semanal
-                    const now = new Date();
-                    const getISOWeek = (date) => {
-                        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-                        const dayNum = d.getUTCDay() || 7;
-                        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-                        const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-                        return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
-                    };
-                    const currentWeek = getISOWeek(now);
-                    const currentYear = now.getFullYear();
-                    const weekId = parseInt(`${currentYear}${currentWeek.toString().padStart(2, '0')}`);
+                // onSnapshot garante que os dados sejam sincronizados em TEMPO REAL para todos os colaboradores
+                onSnapshot(docRef, (docSnap) => {
+                    isDataLoaded = true;
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        
+                        // Elemento ativo para não perder o foco caso o admin esteja digitando
+                        const activeEl = document.activeElement;
+                        const isEditorFocused = activeEl && document.getElementById('tasks-editor-list') && document.getElementById('tasks-editor-list').contains(activeEl);
 
-                    let shouldSave = false;
-                    if (window.lastResetWeek !== weekId) {
-                        if (tasks.length > 0) {
-                            tasks.forEach(t => t.status = 'PENDENTE');
-                            window.lastResetWeek = weekId;
-                            document.getElementById('input-week').value = currentWeek;
-                            
-                            const d = new Date();
-                            const day = d.getDay();
-                            const diff = d.getDate() - day + (day == 0 ? -6 : 1);
-                            const monday = new Date(d.setDate(diff));
-                            const dd = String(monday.getDate()).padStart(2, '0');
-                            const mm = String(monday.getMonth() + 1).padStart(2, '0');
-                            const yyyy = monday.getFullYear();
-                            document.getElementById('input-date').value = `${dd}/${mm}/${yyyy}`;
-                            
-                            shouldSave = true;
+                        // Só atualiza os inputs do cabeçalho se não estiverem sendo focados/editados no momento
+                        if (!activeEl || activeEl.id !== 'input-title') document.getElementById('input-title').value = data.title || "";
+                        if (!activeEl || activeEl.id !== 'input-week') document.getElementById('input-week').value = data.week || "";
+                        if (!activeEl || activeEl.id !== 'input-date') document.getElementById('input-date').value = data.date || "";
+                        if (!activeEl || activeEl.id !== 'input-footer') document.getElementById('input-footer').value = data.footer || "";
+
+                        window.lastResetWeek = data.lastResetWeek || 0;
+                        
+                        if (data.tasks && Array.isArray(data.tasks)) {
+                            tasks = data.tasks;
+                        } else {
+                            tasks = [];
                         }
+                        
+                        // Rotina de reset automático semanal corrigida para não limpar dados válidos recém-criados
+                        const now = new Date();
+                        const getISOWeek = (date) => {
+                            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                            const dayNum = d.getUTCDay() || 7;
+                            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+                            const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+                            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+                        };
+                        const weekId = parseInt(`${now.getFullYear()}${getISOWeek(now).toString().padStart(2, '0')}`);
+
+                        let shouldSave = false;
+                        
+                        if (!window.lastResetWeek || window.lastResetWeek === 0) {
+                            // Primeira vez salvando a semana base, apenas fixa a data sem resetar tarefas
+                            window.lastResetWeek = weekId;
+                            shouldSave = true;
+                        } else if (window.lastResetWeek !== weekId) {
+                            // Se a semana de fato mudou, reseta os status das tarefas para pendente
+                            if (tasks.length > 0) {
+                                tasks.forEach(t => t.status = 'PENDENTE');
+                                window.lastResetWeek = weekId;
+                                
+                                if (!activeEl || activeEl.id !== 'input-week') {
+                                    document.getElementById('input-week').value = getISOWeek(now);
+                                }
+                                
+                                const d = new Date();
+                                const day = d.getDay();
+                                const diff = d.getDate() - day + (day == 0 ? -6 : 1);
+                                const monday = new Date(d.setDate(diff));
+                                const dd = String(monday.getDate()).padStart(2, '0');
+                                const mm = String(monday.getMonth() + 1).padStart(2, '0');
+                                const yyyy = monday.getFullYear();
+                                
+                                if (!activeEl || activeEl.id !== 'input-date') {
+                                    document.getElementById('input-date').value = `${dd}/${mm}/${yyyy}`;
+                                }
+                                
+                                shouldSave = true;
+                            }
+                        }
+                        
+                        // Renderiza e atualiza a interface para quem já fez login
+                        if (currentUserRole) {
+                            window.syncHeaderInputs();
+                            window.updateKPIs();
+                            
+                            // Se o administrador está editando um texto na lista (foco no editor), não re-renderizamos a lista para não perder o cursor
+                            if (!isEditorFocused) {
+                                window.renderEditor();
+                            }
+                            window.renderTable();
+                            
+                            if (shouldSave) {
+                                window.saveDataToCloud();
+                            }
+                        }
+                    } else {
+                        if(currentUserRole) window.loadSampleData(); 
                     }
-                    
-                    if(currentUserRole) window.updateAll(shouldSave);
-                } else {
-                    window.loadSampleData(); 
-                }
+                }, (error) => {
+                    console.error("Erro no onSnapshot:", error);
+                });
             } catch (e) {
-                console.error("Erro ao restaurar progresso:", e);
-                window.loadSampleData();
+                console.error("Erro ao configurar sincronização em tempo real:", e);
+                isDataLoaded = true;
+                if(currentUserRole) window.loadSampleData();
             }
         };
 
         window.logout = function() {
             currentUserRole = null;
+            try { localStorage.removeItem('fazendaOasisRole'); } catch(e) {}
             document.getElementById('login-screen').classList.remove('hidden');
             window.cancelAdminLogin();
         };

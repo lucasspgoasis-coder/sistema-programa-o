@@ -47,6 +47,12 @@
             border: 1px solid #e9d5ff;
         }
 
+        .badge-freq-quinzenal {
+            background-color: #fff7ed;
+            color: #c2410c;
+            border: 1px solid #ffedd5;
+        }
+
         /* Tag de Colaboradores */
         .collaborator-tag {
             background-color: #ffffff;
@@ -96,7 +102,53 @@
 </head>
 <body class="min-h-screen text-slate-100 pb-12">
 
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 shadow-xl">
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-900/95 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden border border-slate-200">
+            <div class="text-center mb-8">
+                <div class="inline-flex bg-teal-100 p-4 rounded-2xl mb-4 text-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">Controle de Acesso</h2>
+                <p class="text-slate-500 text-sm mt-1 font-medium">Selecione seu perfil para continuar</p>
+            </div>
+
+            <!-- Seleção de Perfil -->
+            <div class="grid grid-cols-2 gap-4 mb-2" id="role-selection">
+                <button onclick="window.selectRole('admin')" class="flex flex-col items-center gap-3 p-5 border-2 border-slate-100 bg-slate-50 rounded-2xl hover:border-teal-500 hover:bg-teal-50 transition shadow-sm">
+                    <div class="bg-teal-100 p-3 rounded-full text-teal-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                    </div>
+                    <span class="font-bold text-slate-700 text-sm">Administrador</span>
+                </button>
+                <button onclick="window.loginAs('colaborador')" class="flex flex-col items-center gap-3 p-5 border-2 border-slate-100 bg-slate-50 rounded-2xl hover:border-emerald-500 hover:bg-emerald-50 transition shadow-sm">
+                    <div class="bg-emerald-100 p-3 rounded-full text-emerald-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <span class="font-bold text-slate-700 text-sm">Colaborador</span>
+                </button>
+            </div>
+
+            <!-- Formulário Admin -->
+            <div id="admin-login-form" class="hidden space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Login</label>
+                    <input type="text" id="admin-user" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition shadow-inner" placeholder="Digite seu login">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Senha</label>
+                    <input type="password" id="admin-pass" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition shadow-inner" placeholder="••••••••">
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button onclick="window.cancelAdminLogin()" class="w-1/3 px-4 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition text-sm">Voltar</button>
+                    <button onclick="window.loginAs('admin')" class="w-2/3 px-4 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-bold rounded-xl hover:from-teal-600 hover:to-emerald-600 transition text-sm shadow-md shadow-teal-500/20">Acessar Sistema</button>
+                </div>
+                <p id="login-error" class="text-rose-500 text-sm text-center font-bold hidden bg-rose-50 py-2 rounded-lg border border-rose-100 mt-4">Credenciais incorretas!</p>
+            </div>
+        </div>
+    </div>
+
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 px-4 py-3 shadow-xl">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
                 <div class="bg-gradient-to-tr from-emerald-600 to-teal-400 text-slate-950 p-2.5 rounded-xl font-bold shadow-lg shadow-emerald-900/30">
@@ -108,6 +160,7 @@
                     <h1 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
                         Fazenda Oásis
                         <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold px-2 py-0.5 rounded-md">Gestão de Limpeza</span>
+                        <span id="role-badge" class="hidden text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full font-bold uppercase ml-2 border border-slate-600"></span>
                     </h1>
                     <p class="text-xs text-slate-400">Cronograma Classificado por Frequências: Diária, Semanal e Mensal</p>
                 </div>
@@ -115,7 +168,11 @@
 
             <!-- Botões de Ação Principal -->
             <div class="flex flex-wrap items-center gap-2">
-                <button onclick="loadSampleData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                <button onclick="window.logout()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Trocar Perfil
+                </button>
+                <button onclick="window.loadSampleData()" class="admin-only px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5 hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
@@ -125,14 +182,14 @@
                     </svg>
                     Modelo Padrão
                 </button>
-                <button onclick="loadCleaningRoutine()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                <button onclick="window.loadCleaningRoutine()" class="admin-only px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5 hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     Rotina Completa
                 </button>
-                <button onclick="downloadAsJPEG()" id="btn-export" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-bold rounded-lg shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
+                <button onclick="window.downloadAsJPEG()" id="btn-export" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-bold rounded-lg shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -201,10 +258,18 @@
                         Tarefas de Limpeza
                         <span id="task-count-badge" class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-2 py-0.5 rounded-full font-bold shadow-sm">0</span>
                     </h3>
-                    <button onclick="addTaskRow()" class="text-xs bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1.5 rounded-lg hover:bg-teal-100 hover:border-teal-300 font-bold transition flex items-center gap-1 shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Nova Atividade
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <!-- Botão Resetar Status Global (Apenas Admin) -->
+                        <button onclick="window.resetStatuses()" class="admin-only text-xs bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1.5 rounded-lg hover:bg-orange-100 hover:border-orange-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                            Resetar
+                        </button>
+                        <!-- Botão Nova Atividade (Apenas Admin) -->
+                        <button onclick="window.addTaskRow()" class="admin-only text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg hover:bg-emerald-100 hover:border-emerald-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Nova
+                        </button>
+                    </div>
                 </div>
 
                 <div id="tasks-editor-list" class="space-y-4 max-h-[520px] overflow-y-auto pr-2 pb-2">
@@ -212,7 +277,6 @@
                 </div>
             </div>
         </section>
-
 
         <!-- PAINEL DE PREVISÃO DO CARD / EXPORTAÇÃO (8 colunas) -->
         <section class="lg:col-span-8 space-y-4">
@@ -230,9 +294,8 @@
                 <!-- CONTAINER PRINCIPAL CAPTURADO PELO HTML2CANVAS -->
                 <div id="schedule-card" class="preview-container p-6 md:p-8 rounded-2xl space-y-5 text-slate-800 min-w-[940px]">
                     
-                    <!-- BANNER SUPERIOR DE CABEÇALHO (DESIGN NOVO E EXCLUSIVO) -->
+                    <!-- BANNER SUPERIOR DE CABEÇALHO -->
                     <div class="bg-slate-900 rounded-2xl p-6 shadow-md border border-slate-800 text-white relative overflow-hidden">
-                        <!-- Elemento decorativo de fundo -->
                         <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
                         <div class="absolute right-32 -top-10 w-32 h-32 bg-teal-500/10 rounded-full blur-xl pointer-events-none"></div>
 
@@ -260,9 +323,7 @@
                     </div>
 
                     <!-- DASHBOARD DE MÉTRICAS E INDICADORES (KPIs) -->
-                    <div class="grid grid-cols-5 gap-3">
-                        
-                        <!-- KPI 1: TOTAL DE TAREFAS -->
+                    <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
                         <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -276,11 +337,8 @@
                             </div>
                         </div>
 
-                        <!-- KPI 2: LIMPEZA DIÁRIA -->
                         <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-emerald-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-black text-xs">
-                                DIA
-                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-black text-xs">DIA</div>
                             <div>
                                 <div id="kpi-diaria" class="text-xl font-black text-emerald-700 leading-none">0</div>
                                 <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA DIÁRIA</div>
@@ -288,11 +346,8 @@
                             </div>
                         </div>
 
-                        <!-- KPI 3: LIMPEZA SEMANAL -->
                         <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-blue-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-black text-xs">
-                                SEM
-                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-black text-xs">SEM</div>
                             <div>
                                 <div id="kpi-semanal" class="text-xl font-black text-blue-700 leading-none">0</div>
                                 <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA SEMANAL</div>
@@ -300,11 +355,17 @@
                             </div>
                         </div>
 
-                        <!-- KPI 4: LIMPEZA MENSAL -->
-                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-purple-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-black text-xs">
-                                MES
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-orange-100 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center shrink-0 font-black text-xs">15D</div>
+                            <div>
+                                <div id="kpi-quinzenal" class="text-xl font-black text-orange-700 leading-none">0</div>
+                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMP. QUINZENAL</div>
+                                <div id="kpi-quinzenal-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
                             </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-purple-100 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-black text-xs">MES</div>
                             <div>
                                 <div id="kpi-mensal" class="text-xl font-black text-purple-700 leading-none">0</div>
                                 <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA MENSAL</div>
@@ -312,7 +373,6 @@
                             </div>
                         </div>
 
-                        <!-- KPI 5: PROGRESSO GERAL DE CONCLUSÃO -->
                         <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -322,31 +382,24 @@
                             <div class="w-full">
                                 <div id="kpi-conclusao-pct" class="text-xl font-black text-slate-900 leading-none">0%</div>
                                 <div class="text-[10px] font-bold text-slate-600 uppercase tracking-tight mt-1">CONCLUÍDAS</div>
-                                <!-- Barra de Progresso Visual -->
                                 <div class="w-full bg-slate-100 rounded-full h-1.5 mt-1.5 overflow-hidden">
                                     <div id="kpi-progress-bar" class="bg-emerald-500 h-1.5 rounded-full" style="width: 0%"></div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
-                    <!-- TABELA DE ATIVIDADES CLASSIFICADAS POR FREQUÊNCIA E EQUIPE -->
+                    <!-- TABELA DE ATIVIDADES -->
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        
-                        <!-- Header da Tabela (Novo visual limpo e elegante) -->
                         <div class="bg-slate-800 text-slate-200 px-6 py-3.5 grid grid-cols-12 gap-4 text-[11px] font-extrabold tracking-wider uppercase border-b border-slate-700">
                             <div class="col-span-3">FREQUÊNCIA & PRIORIDADE</div>
                             <div class="col-span-4">COLABORADORES DESIGNADOS</div>
                             <div class="col-span-3">SERVIÇO DE LIMPEZA & LOCAL</div>
                             <div class="col-span-2 text-center">STATUS</div>
                         </div>
-
-                        <!-- Corpo da Tabela -->
                         <div id="table-body" class="divide-y divide-slate-100">
                             <!-- Gerado Dinamicamente -->
                         </div>
-
                     </div>
 
                     <!-- RODAPÉ COMPACTO DO CARD -->
@@ -359,20 +412,451 @@
                             Documento Operacional
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </section>
-
     </main>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         /* ESTADO INICIAL DA APLICAÇÃO */
         let tasks = [];
+        let currentUserRole = null; // 'admin' ou 'colaborador'
+        
+        let app, auth, db, userId;
+        let isDataLoaded = false;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'fazenda-oasis';
+        let saveTimeout;
 
-        /* CARREGAR MODELO PADRÃO COM A NOVA CLASSIFICAÇÃO */
-        function loadSampleData() {
+        /* INIT EVENTS */
+        window.onload = function() {
+            document.getElementById('input-title').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
+            document.getElementById('input-week').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
+            document.getElementById('input-date').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
+            document.getElementById('input-footer').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
+        };
+
+        // Firebase Inicialização
+        try {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            if (firebaseConfig) {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                const initAuth = async () => {
+                    try {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch (e) {
+                        console.error("Erro na autenticação:", e);
+                        isDataLoaded = true;
+                    }
+                };
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        await window.loadDataFromCloud();
+                        isDataLoaded = true;
+                    }
+                });
+
+                initAuth();
+            } else {
+                isDataLoaded = true;
+            }
+        } catch (error) {
+            console.warn("Executando em modo local.", error);
+            isDataLoaded = true;
+        }
+
+        /* LOGICA DE LOGIN E ROLES */
+        window.selectRole = function(role) {
+            if (role === 'admin') {
+                document.getElementById('role-selection').classList.add('hidden');
+                document.getElementById('admin-login-form').classList.remove('hidden');
+            }
+        };
+
+        window.cancelAdminLogin = function() {
+            document.getElementById('admin-login-form').classList.add('hidden');
+            document.getElementById('role-selection').classList.remove('hidden');
+            document.getElementById('login-error').classList.add('hidden');
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+        };
+
+        window.loginAs = function(role) {
+            if (role === 'admin') {
+                const user = document.getElementById('admin-user').value;
+                const pass = document.getElementById('admin-pass').value;
+                
+                // Credenciais solicitadas na instrução
+                if (user === 'adm123' && pass === 'lucas@2026') {
+                    currentUserRole = 'admin';
+                    document.getElementById('login-screen').classList.add('hidden');
+                    window.applyRoleRestrictions();
+                } else {
+                    document.getElementById('login-error').classList.remove('hidden');
+                }
+            } else if (role === 'colaborador') {
+                currentUserRole = 'colaborador';
+                document.getElementById('login-screen').classList.add('hidden');
+                window.applyRoleRestrictions();
+            }
+        };
+
+        window.applyRoleRestrictions = function() {
+            const isAdmin = currentUserRole === 'admin';
+            
+            // Badge no topo
+            const roleBadge = document.getElementById('role-badge');
+            roleBadge.classList.remove('hidden');
+            roleBadge.innerText = isAdmin ? 'Acesso: Administrador' : 'Acesso: Colaborador';
+            
+            // Desativar inputs do cabeçalho para colaboradores
+            document.getElementById('input-title').disabled = !isAdmin;
+            document.getElementById('input-week').disabled = !isAdmin;
+            document.getElementById('input-date').disabled = !isAdmin;
+            document.getElementById('input-footer').disabled = !isAdmin;
+            
+            const topInputs = ['input-title', 'input-week', 'input-date', 'input-footer'];
+            topInputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (!isAdmin) {
+                    el.classList.add('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
+                    el.classList.remove('bg-slate-50', 'bg-white');
+                } else {
+                    el.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
+                    el.classList.add('bg-slate-50');
+                }
+            });
+
+            // Ocultar botões admin-only
+            const adminButtons = document.querySelectorAll('.admin-only');
+            adminButtons.forEach(btn => {
+                if (!isAdmin) {
+                    btn.classList.add('hidden');
+                } else {
+                    btn.classList.remove('hidden');
+                }
+            });
+
+            // Re-renderiza tudo para aplicar restrições no editor
+            window.updateAll(false);
+        };
+
+        /* FUNÇÃO PARA SALVAR NA NUVEM */
+        window.saveDataToCloud = async function() {
+            if (!db || !userId || !isDataLoaded) return;
+            
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async () => {
+                try {
+                    // Utilizando a rota pública para que Administrador e Colaborador leiam do mesmo arquivo central
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
+                    const state = {
+                        title: document.getElementById('input-title').value,
+                        week: document.getElementById('input-week').value,
+                        date: document.getElementById('input-date').value,
+                        footer: document.getElementById('input-footer').value,
+                        tasks: tasks
+                    };
+                    await setDoc(docRef, state);
+                } catch (e) {
+                    console.error("Erro ao salvar progresso:", e);
+                }
+            }, 800);
+        };
+
+        /* FUNÇÃO PARA CARREGAR DA NUVEM */
+        window.loadDataFromCloud = async function() {
+            if (!db || !userId) return;
+            try {
+                // Utilizando a rota pública 
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('input-title').value = data.title || "";
+                    document.getElementById('input-week').value = data.week || "";
+                    document.getElementById('input-date').value = data.date || "";
+                    document.getElementById('input-footer').value = data.footer || "";
+                    
+                    if (data.tasks && Array.isArray(data.tasks) && data.tasks.length > 0) {
+                        tasks = data.tasks;
+                    }
+                    
+                    if(currentUserRole) window.updateAll(false);
+                } else {
+                    window.loadSampleData(); 
+                }
+            } catch (e) {
+                console.error("Erro ao restaurar progresso:", e);
+                window.loadSampleData();
+            }
+        };
+
+        window.logout = function() {
+            currentUserRole = null;
+            document.getElementById('login-screen').classList.remove('hidden');
+            window.cancelAdminLogin();
+        };
+
+        /* UPDATE ALL UI */
+        window.updateAll = function(save = true) {
+            window.syncHeaderInputs();
+            window.updateKPIs();
+            window.renderEditor();
+            window.renderTable();
+            if (save) window.saveDataToCloud();
+        };
+
+        /* CABEÇALHOS */
+        window.syncHeaderInputs = function() {
+            document.getElementById('card-display-title').innerText = document.getElementById('input-title').value || "PROGRAMAÇÃO DE LIMPEZA";
+            document.getElementById('card-display-week').innerText = document.getElementById('input-week').value || "00";
+            document.getElementById('card-display-date').innerText = document.getElementById('input-date').value || "--/--/----";
+            document.getElementById('card-display-footer').innerText = document.getElementById('input-footer').value || "FAZENDA OÁSIS";
+        };
+
+        /* KPIS */
+        window.updateKPIs = function() {
+            const total = tasks.length;
+            const diarias = tasks.filter(t => t.frequency === 'DIÁRIA').length;
+            const semanais = tasks.filter(t => t.frequency === 'SEMANAL').length;
+            const quinzenais = tasks.filter(t => t.frequency === 'QUINZENAL').length;
+            const mensais = tasks.filter(t => t.frequency === 'MENSAL').length;
+            const concluidas = tasks.filter(t => t.status === 'CONCLUÍDO').length;
+
+            document.getElementById('kpi-total').innerText = total;
+            document.getElementById('kpi-diaria').innerText = diarias;
+            document.getElementById('kpi-semanal').innerText = semanais;
+            document.getElementById('kpi-quinzenal').innerText = quinzenais;
+            document.getElementById('kpi-mensal').innerText = mensais;
+
+            const calcPct = (val) => total > 0 ? Math.round((val / total) * 100) : 0;
+            
+            document.getElementById('kpi-diaria-pct').innerText = `${calcPct(diarias)}% do total`;
+            document.getElementById('kpi-semanal-pct').innerText = `${calcPct(semanais)}% do total`;
+            document.getElementById('kpi-quinzenal-pct').innerText = `${calcPct(quinzenais)}% do total`;
+            document.getElementById('kpi-mensal-pct').innerText = `${calcPct(mensais)}% do total`;
+            
+            const pctConclusao = calcPct(concluidas);
+            document.getElementById('kpi-conclusao-pct').innerText = `${pctConclusao}%`;
+            document.getElementById('kpi-progress-bar').style.width = `${pctConclusao}%`;
+            document.getElementById('task-count-badge').innerText = total;
+        };
+
+        /* RENDER EDITOR */
+        window.renderEditor = function() {
+            const container = document.getElementById('tasks-editor-list');
+            container.innerHTML = '';
+            
+            const isAdmin = currentUserRole === 'admin';
+            const disabledAttr = isAdmin ? '' : 'disabled';
+            const readonlyClass = isAdmin ? '' : 'opacity-60 cursor-not-allowed bg-slate-100';
+
+            tasks.forEach((task, index) => {
+                const card = document.createElement('div');
+                card.className = `bg-white border border-slate-200 rounded-xl p-4 space-y-3 relative shadow-sm transition-colors duration-200 ${isAdmin ? 'hover:border-emerald-300' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 border-b border-slate-100 pb-2.5">
+                        <span class="flex items-center gap-1.5 bg-slate-100 px-2 py-1 rounded text-slate-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            Item #${index + 1}
+                        </span>
+                        ${isAdmin ? `
+                        <button onclick="window.removeTaskRow(${task.id})" class="text-rose-600 hover:text-rose-700 hover:bg-rose-100 text-[11px] font-bold bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 transition shadow-sm flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            Excluir
+                        </button>` : ''}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-600 font-bold mb-1">Frequência</label>
+                            <select onchange="window.updateTaskField(${task.id}, 'frequency', this.value)" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-2 text-slate-800 font-bold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xs shadow-inner transition ${readonlyClass}" ${disabledAttr}>
+                                <option value="DIÁRIA" ${task.frequency === 'DIÁRIA' ? 'selected' : ''}>LIMPEZA DIÁRIA</option>
+                                <option value="SEMANAL" ${task.frequency === 'SEMANAL' ? 'selected' : ''}>LIMPEZA SEMANAL</option>
+                                <option value="QUINZENAL" ${task.frequency === 'QUINZENAL' ? 'selected' : ''}>LIMPEZA QUINZENAL</option>
+                                <option value="MENSAL" ${task.frequency === 'MENSAL' ? 'selected' : ''}>LIMPEZA MENSAL</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-600 font-bold mb-1">Status (Editável por todos)</label>
+                            <select onchange="window.updateTaskField(${task.id}, 'status', this.value)" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-2 text-slate-800 font-bold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xs shadow-inner transition cursor-pointer">
+                                <option value="PENDENTE" ${task.status === 'PENDENTE' ? 'selected' : ''}>PENDENTE</option>
+                                <option value="EM ANDAMENTO" ${task.status === 'EM ANDAMENTO' ? 'selected' : ''}>EM ANDAMENTO</option>
+                                <option value="CONCLUÍDO" ${task.status === 'CONCLUÍDO' ? 'selected' : ''}>CONCLUÍDO</option>
+                            </select>
+                        </div>
+                        ${task.frequency === 'SEMANAL' ? `
+                        <div class="col-span-2">
+                            <label class="block text-blue-600 font-bold mb-1 flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>Dia da Semana (Programação Semanal)</label>
+                            <select onchange="window.updateTaskField(${task.id}, 'dayOfWeek', this.value)" class="w-full bg-blue-50 border border-blue-200 rounded-lg px-2 py-2 text-slate-800 font-bold focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs shadow-inner transition ${readonlyClass}" ${disabledAttr}>
+                                <option value="SEGUNDA" ${task.dayOfWeek === 'SEGUNDA' ? 'selected' : ''}>Segunda-feira</option>
+                                <option value="TERÇA" ${task.dayOfWeek === 'TERÇA' ? 'selected' : ''}>Terça-feira</option>
+                                <option value="QUARTA" ${task.dayOfWeek === 'QUARTA' ? 'selected' : ''}>Quarta-feira</option>
+                                <option value="QUINTA" ${task.dayOfWeek === 'QUINTA' ? 'selected' : ''}>Quinta-feira</option>
+                                <option value="SEXTA" ${task.dayOfWeek === 'SEXTA' ? 'selected' : ''}>Sexta-feira</option>
+                                <option value="SÁBADO" ${task.dayOfWeek === 'SÁBADO' ? 'selected' : ''}>Sábado</option>
+                                <option value="DOMINGO" ${task.dayOfWeek === 'DOMINGO' ? 'selected' : ''}>Domingo</option>
+                            </select>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-600 font-bold mb-1">Ordem (1, 2, 3...)</label>
+                            <input type="number" min="1" value="${task.priority}" oninput="window.updateTaskField(${task.id}, 'priority', this.value)" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-2 text-slate-800 font-extrabold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xs shadow-inner transition ${readonlyClass}" ${disabledAttr}>
+                        </div>
+                        <div>
+                            <label class="block text-slate-600 font-bold mb-1">Bloco / Setor / Local</label>
+                            <input type="text" value="${task.block}" oninput="window.updateTaskField(${task.id}, 'block', this.value)" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-2 text-slate-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-inner transition ${readonlyClass}" ${disabledAttr}>
+                        </div>
+                    </div>
+
+                    <div class="text-xs">
+                        <label class="block text-slate-600 font-bold mb-1 flex items-center gap-1">Colaboradores (Separados por vírgula)</label>
+                        <input type="text" value="${(task.collaborators || []).join(', ')}" oninput="window.updateTaskField(${task.id}, 'collaborators', this.value)" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-2 text-slate-800 font-medium text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-inner transition ${readonlyClass}" ${disabledAttr}>
+                    </div>
+
+                    <div class="text-xs">
+                        <label class="block text-slate-600 font-bold mb-1 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Serviço de Limpeza</label>
+                        <textarea oninput="window.updateTaskField(${task.id}, 'serviceName', this.value)" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-2 text-slate-800 font-medium text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-inner transition ${readonlyClass}" ${disabledAttr} rows="2">${task.serviceName}</textarea>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        /* RENDER TABLE PREVIEW */
+        window.renderTable = function() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            const sortedTasks = [...tasks].sort((a, b) => a.priority - b.priority);
+
+            sortedTasks.forEach(task => {
+                let freqBadge = '';
+                if (task.frequency === 'DIÁRIA') {
+                    freqBadge = `<span class="badge-freq-diaria px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>DIÁRIA</span>`;
+                } else if (task.frequency === 'SEMANAL') {
+                    const dayOfWeek = task.dayOfWeek || 'SEGUNDA';
+                    freqBadge = `<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm border-2 border-white ring-1 ring-blue-200"></span><span class="badge-freq-semanal px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-blue-300">SEMANAL</span><span class="text-[10px] font-black text-blue-600 tracking-wider ml-0.5">${dayOfWeek}</span></div>`;
+                } else if (task.frequency === 'QUINZENAL') {
+                    freqBadge = `<span class="badge-freq-quinzenal px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>QUINZENAL</span>`;
+                } else if (task.frequency === 'MENSAL') {
+                    freqBadge = `<span class="badge-freq-mensal px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>MENSAL</span>`;
+                }
+
+                let statusBadge = '';
+                if (task.status === 'PENDENTE') {
+                    statusBadge = `<span class="status-badge-pendente px-2 py-1 rounded text-[10px] font-bold uppercase flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>PENDENTE</span>`;
+                } else if (task.status === 'EM ANDAMENTO') {
+                    statusBadge = `<span class="status-badge-andamento px-2 py-1 rounded text-[10px] font-bold uppercase flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>ANDAMENTO</span>`;
+                } else if (task.status === 'CONCLUÍDO') {
+                    statusBadge = `<span class="status-badge-concluido px-2 py-1 rounded text-[10px] font-bold uppercase flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>CONCLUÍDO</span>`;
+                }
+
+                let collabsHtml = (task.collaborators || []).map(c => `<span class="collaborator-tag">${c}</span>`).join(' ');
+
+                const row = document.createElement('div');
+                row.className = "px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-slate-50 transition-colors";
+                row.innerHTML = `
+                    <div class="col-span-3 flex flex-col gap-1.5 items-start">
+                        ${freqBadge}
+                        <div class="text-[10px] text-slate-400 font-bold ml-1">PRIORIDADE #${task.priority}</div>
+                    </div>
+                    <div class="col-span-4 flex flex-wrap gap-1">
+                        ${collabsHtml}
+                    </div>
+                    <div class="col-span-3">
+                        <div class="text-[11px] font-extrabold text-slate-800 leading-tight uppercase">${task.serviceName}</div>
+                        <div class="text-[10px] font-bold text-slate-500 mt-1 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            ${task.block}
+                        </div>
+                    </div>
+                    <div class="col-span-2 flex justify-center">
+                        ${statusBadge}
+                    </div>
+                `;
+                tbody.appendChild(row);
+            });
+        };
+
+        /* ACÕES DAS TAREFAS */
+        window.addTaskRow = function() {
+            const newId = Date.now();
+            tasks.push({
+                id: newId,
+                frequency: "DIÁRIA",
+                dayOfWeek: "SEGUNDA",
+                priority: tasks.length + 1,
+                collaborators: ["Novo Colaborador"],
+                serviceName: "Nova atividade de limpeza",
+                block: "SETOR 01",
+                status: "PENDENTE"
+            });
+            window.updateAll();
+        };
+
+        window.removeTaskRow = function(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            window.updateAll();
+        };
+
+        window.updateTaskField = function(id, field, value) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            // Se mudou para semanal e ainda não tiver um dia padrão salvo
+            if (field === 'frequency' && value === 'SEMANAL' && !task.dayOfWeek) {
+                task.dayOfWeek = 'SEGUNDA';
+            }
+
+            if (field === 'collaborators') {
+                task.collaborators = value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            } else if (field === 'priority') {
+                task.priority = parseInt(value) || 0;
+            } else {
+                task[field] = value;
+            }
+
+            window.updateAll();
+        };
+
+        // Reset global visível apenas para o administrador
+        window.resetStatuses = function() {
+            tasks.forEach(t => t.status = 'PENDENTE');
+            window.updateAll();
+        };
+
+        /* EXPORTAÇÃO */
+        window.downloadAsJPEG = function() {
+            const card = document.getElementById('schedule-card');
+            html2canvas(card, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Programacao_Limpeza_Semana_${document.getElementById('input-week').value}.jpeg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        };
+
+        /* MODELOS BASE (Caso não haja dados na nuvem) */
+        window.loadSampleData = function() {
             document.getElementById('input-title').value = "PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO";
             document.getElementById('input-week').value = "40";
             document.getElementById('input-date').value = "28/09/2026";
@@ -382,7 +866,7 @@
                 {
                     id: 1,
                     frequency: "DIÁRIA",
-                    priority: "1",
+                    priority: 1,
                     collaborators: ["Jucivan Xavier", "Jonas de Sousa", "Isaac de Oliveira"],
                     serviceName: "Lavagem e sanitização dos galpões de colheita e bancadas",
                     block: "GALPÃO PRINCIPAL",
@@ -391,7 +875,7 @@
                 {
                     id: 2,
                     frequency: "DIÁRIA",
-                    priority: "2",
+                    priority: 2,
                     collaborators: ["Manoel Messias", "Kauan Xavier", "João Batista"],
                     serviceName: "Higienização diária de caixas plásticas e utensílios",
                     block: "SETOR DE EMBALAGEM",
@@ -400,7 +884,8 @@
                 {
                     id: 3,
                     frequency: "SEMANAL",
-                    priority: "3",
+                    dayOfWeek: "QUARTA",
+                    priority: 3,
                     collaborators: ["Eduardo Souza", "Antonio Adriano", "Janiel Lopes"],
                     serviceName: "Limpeza das bordas, roçagem e capina dos canteiros",
                     block: "BLOCO- 08 e BLOCO- 09",
@@ -408,17 +893,17 @@
                 },
                 {
                     id: 4,
-                    frequency: "SEMANAL",
-                    priority: "4",
+                    frequency: "QUINZENAL",
+                    priority: 4,
                     collaborators: ["Pedro Henrique", "Marcos de Lima"],
-                    serviceName: "Desobststrução e limpeza de calhas e canais de drenagem",
+                    serviceName: "Desobstrução e limpeza de calhas e canais de drenagem",
                     block: "ESTUFAS 01 A 04",
                     status: "EM ANDAMENTO"
                 },
                 {
                     id: 5,
                     frequency: "MENSAL",
-                    priority: "5",
+                    priority: 5,
                     collaborators: ["Mateus Lopes", "Jucivan Xavier", "Manoel Messias"],
                     serviceName: "Desinfecção profunda de reservatórios, filtros de irrigação e depósitos",
                     block: "SETOR DE IRRIGAÇÃO",
@@ -426,11 +911,10 @@
                 }
             ];
 
-            updateAll();
-        }
+            if(currentUserRole) window.updateAll();
+        };
 
-        /* CARREGAR ROTINA COMPLETA DE LIMPEZA */
-        function loadCleaningRoutine() {
+        window.loadCleaningRoutine = function() {
             document.getElementById('input-title').value = "CRONOGRAMA GERAL DE LIMPEZA E SANIDADE";
             document.getElementById('input-week').value = "41";
             document.getElementById('input-date').value = "05/10/2026";
@@ -440,335 +924,36 @@
                 {
                     id: 1,
                     frequency: "DIÁRIA",
-                    priority: "1",
+                    priority: 1,
                     collaborators: ["Jucivan Xavier", "Pedro Henrique"],
                     serviceName: "Recolhimento diário de resíduos e limpeza da recepção de frutas",
                     block: "ÁREA DE RECEBIMENTO",
                     status: "CONCLUÍDO"
                 },
                 {
-                    id: 2,
-                    frequency: "DIÁRIA",
-                    priority: "2",
-                    collaborators: ["Jonas de Sousa", "Janiel Lopes"],
-                    serviceName: "Varreção e lavagem com sabão neutro das câmaras frias",
-                    block: "CÂMARA FRIA 01 E 02",
-                    status: "EM ANDAMENTO"
-                },
-                {
                     id: 3,
                     frequency: "SEMANAL",
-                    priority: "3",
+                    dayOfWeek: "SEXTA",
+                    priority: 3,
                     collaborators: ["Manoel Messias", "Kauan Xavier", "Marcos de Lima"],
                     serviceName: "Limpeza de telas anti-insetos e estruturas laterais",
                     block: "ESTUFA 03",
                     status: "PENDENTE"
                 },
                 {
-                    id: 4,
-                    frequency: "SEMANAL",
-                    priority: "4",
-                    collaborators: ["Eduardo Souza", "Antonio Adriano"],
-                    serviceName: "Organização e higienização do depósito de fertilizantes",
-                    block: "DEPÓSITO CENTRAL",
-                    status: "PENDENTE"
-                },
-                {
                     id: 5,
                     frequency: "MENSAL",
-                    priority: "5",
+                    priority: 5,
                     collaborators: ["Isaac de Oliveira", "Mateus Lopes"],
                     serviceName: "Lavagem e sanitização completa de tratores e carretas de colheita",
-                    block: "PATIÔ DE MÁQUINAS",
-                    status: "PENDENTE"
-                },
-                {
-                    id: 6,
-                    frequency: "MENSAL",
-                    priority: "6",
-                    collaborators: ["Jucivan Xavier", "Manoel Messias"],
-                    serviceName: "Limpeza e pulverização sanitizante dos silos de armazenamento",
-                    block: "SETOR DE SILOS",
+                    block: "PÁTIO DE MÁQUINAS",
                     status: "PENDENTE"
                 }
             ];
 
-            updateAll();
-        }
+            if(currentUserRole) window.updateAll();
+        };
 
-        /* ADICIONAR NOVA LINHA DE TAREFA */
-        function addTaskRow() {
-            const newId = Date.now();
-            tasks.push({
-                id: newId,
-                frequency: "DIÁRIA",
-                priority: tasks.length + 1,
-                collaborators: ["Novo Colaborador"],
-                serviceName: "Nova atividade de limpeza",
-                block: "SETOR 01",
-                status: "PENDENTE"
-            });
-            updateAll();
-        }
-
-        /* REMOVER TAREFA */
-        function removeTaskRow(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            updateAll();
-        }
-
-        /* ATUALIZAR CAMPO DE TAREFA */
-        function updateTaskField(id, field, value) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-
-            if (field === 'collaborators') {
-                task.collaborators = value.split(',').map(s => s.trim()).filter(s => s.length > 0);
-            } else {
-                task[field] = value;
-            }
-
-            // Atualiza apenas a tabela e os KPIs em tempo real para nao perder o foco da digitacao no input
-            renderTable();
-            updateKPIs();
-        }
-
-        /* CALCULAR E ATUALIZAR METRICAS (KPIS) */
-        function updateKPIs() {
-            const total = tasks.length;
-            const diarias = tasks.filter(t => t.frequency === 'DIÁRIA').length;
-            const semanais = tasks.filter(t => t.frequency === 'SEMANAL').length;
-            const mensais = tasks.filter(t => t.frequency === 'MENSAL').length;
-            const concluidas = tasks.filter(t => t.status === 'CONCLUÍDO').length;
-
-            document.getElementById('kpi-total').innerText = total;
-            document.getElementById('kpi-diaria').innerText = diarias;
-            document.getElementById('kpi-semanal').innerText = semanais;
-            document.getElementById('kpi-mensal').innerText = mensais;
-
-            const pctDiaria = total > 0 ? Math.round((diarias / total) * 100) : 0;
-            const pctSemanal = total > 0 ? Math.round((semanais / total) * 100) : 0;
-            const pctMensal = total > 0 ? Math.round((mensais / total) * 100) : 0;
-            const pctConclusao = total > 0 ? Math.round((concluidas / total) * 100) : 0;
-
-            document.getElementById('kpi-diaria-pct').innerText = `${pctDiaria}% do total`;
-            document.getElementById('kpi-semanal-pct').innerText = `${pctSemanal}% do total`;
-            document.getElementById('kpi-mensal-pct').innerText = `${pctMensal}% do total`;
-            
-            document.getElementById('kpi-conclusao-pct').innerText = `${pctConclusao}%`;
-            document.getElementById('kpi-progress-bar').style.width = `${pctConclusao}%`;
-
-            document.getElementById('task-count-badge').innerText = total;
-        }
-
-        /* SINCRONIZAR CABEÇALHOS DO CARD */
-        function syncHeaderInputs() {
-            document.getElementById('card-display-title').innerText = document.getElementById('input-title').value || "PROGRAMAÇÃO DE LIMPEZA";
-            document.getElementById('card-display-week').innerText = document.getElementById('input-week').value || "00";
-            document.getElementById('card-display-date').innerText = document.getElementById('input-date').value || "--/--/----";
-            document.getElementById('card-display-footer').innerText = document.getElementById('input-footer').value || "FAZENDA OÁSIS";
-        }
-
-        /* RENDERIZAR EDITOR LATERAL */
-        function renderEditor() {
-            const container = document.getElementById('tasks-editor-list');
-            container.innerHTML = '';
-
-            tasks.forEach((task, index) => {
-                const card = document.createElement('div');
-                card.className = "bg-white border border-slate-200 rounded-xl p-4 space-y-3 relative shadow-sm hover:border-teal-300 transition-colors duration-200";
-                
-                card.innerHTML = `
-                    <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 border-b border-slate-100 pb-2.5">
-                        <span class="flex items-center gap-1.5 bg-slate-100 px-2 py-1 rounded text-slate-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-teal-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                            Item #${index + 1}
-                        </span>
-                        <button onclick="removeTaskRow(${task.id})" class="text-rose-600 hover:text-rose-700 hover:bg-rose-100 text-[11px] font-bold bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 transition shadow-sm flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                            Excluir
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-600 font-bold mb-1">Frequência</label>
-                            <select onchange="updateTaskField(${task.id}, 'frequency', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-bold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white text-xs shadow-inner transition">
-                                <option value="DIÁRIA" ${task.frequency === 'DIÁRIA' ? 'selected' : ''}>LIMPEZA DIÁRIA</option>
-                                <option value="SEMANAL" ${task.frequency === 'SEMANAL' ? 'selected' : ''}>LIMPEZA SEMANAL</option>
-                                <option value="MENSAL" ${task.frequency === 'MENSAL' ? 'selected' : ''}>LIMPEZA MENSAL</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-slate-600 font-bold mb-1">Status</label>
-                            <select onchange="updateTaskField(${task.id}, 'status', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-bold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white text-xs shadow-inner transition">
-                                <option value="PENDENTE" ${task.status === 'PENDENTE' ? 'selected' : ''}>PENDENTE</option>
-                                <option value="EM ANDAMENTO" ${task.status === 'EM ANDAMENTO' ? 'selected' : ''}>EM ANDAMENTO</option>
-                                <option value="CONCLUÍDO" ${task.status === 'CONCLUÍDO' ? 'selected' : ''}>CONCLUÍDO</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-600 font-bold mb-1">Ordem (1, 2, 3...)</label>
-                            <input type="number" min="1" value="${task.priority}" oninput="updateTaskField(${task.id}, 'priority', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-extrabold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white text-xs shadow-inner transition">
-                        </div>
-                        <div>
-                            <label class="block text-slate-600 font-bold mb-1">Bloco / Setor / Local</label>
-                            <input type="text" value="${task.block}" oninput="updateTaskField(${task.id}, 'block', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition">
-                        </div>
-                    </div>
-
-                    <div class="text-xs">
-                        <label class="block text-slate-600 font-bold mb-1 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Serviço de Limpeza</label>
-                        <textarea oninput="updateTaskField(${task.id}, 'serviceName', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 text-slate-800 font-medium text-xs focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition" rows="2">${task.serviceName}</textarea>
-                    </div>
-
-                    <div class="text-xs">
-                        <label class="block text-slate-600 font-bold mb-1 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Colaboradores (Separados por vírgula)</label>
-                        <input type="text" value="${task.collaborators.join(', ')}" oninput="updateTaskField(${task.id}, 'collaborators', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 text-slate-800 font-medium text-xs focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition" placeholder="Ex: João, Maria, Pedro">
-                    </div>
-                `;
-
-                container.appendChild(card);
-            });
-        }
-
-        /* RENDERIZAR TABELA NO CARD PREVIEW */
-        function renderTable() {
-            const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = '';
-
-            tasks.forEach((task) => {
-                const row = document.createElement('div');
-                row.className = "px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-slate-50/80 transition";
-
-                // Badges de Colaboradores
-                const collabBadges = task.collaborators.map(c => `<span class="collaborator-tag">${c}</span>`).join(' ');
-
-                // Estilos do Badge de Frequência
-                let freqClass = "badge-freq-diaria";
-                if (task.frequency === "SEMANAL") freqClass = "badge-freq-semanal";
-                if (task.frequency === "MENSAL") freqClass = "badge-freq-mensal";
-
-                // Estilos do Badge de Status
-                let statusClass = "status-badge-pendente";
-                if (task.status === "EM ANDAMENTO") statusClass = "status-badge-andamento";
-                if (task.status === "CONCLUÍDO") statusClass = "status-badge-concluido";
-
-                row.innerHTML = `
-                    <!-- Coluna 1: Frequência & Ordem -->
-                    <div class="col-span-3 flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-slate-800 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-sm border border-slate-700" title="Ordem ${task.priority}">
-                            ${task.priority || ''}
-                        </div>
-                        <div class="space-y-1">
-                            <div>
-                                <span class="inline-block ${freqClass} font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                                    ${task.frequency || 'DIÁRIA'}
-                                </span>
-                            </div>
-                            <div class="text-[9px] font-bold text-slate-500 uppercase tracking-tight">
-                                ORDEM ${task.priority || ''}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Coluna 2: Colaboradores Designados -->
-                    <div class="col-span-4 flex flex-wrap gap-1.5">
-                        ${collabBadges}
-                    </div>
-
-                    <!-- Coluna 3: Serviço Planejado + Local -->
-                    <div class="col-span-3 space-y-1">
-                        <div class="font-bold text-slate-900 text-xs leading-snug">
-                            ${task.serviceName}
-                        </div>
-                        <div>
-                            <span class="inline-block bg-slate-100 text-slate-600 font-extrabold text-[9px] px-2 py-0.5 rounded uppercase tracking-wider border border-slate-200">
-                                ${task.block || 'GERAL'}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Coluna 4: Status -->
-                    <div class="col-span-2 text-center">
-                        <span class="inline-block ${statusClass} font-extrabold text-[10px] px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
-                            ${task.status}
-                        </span>
-                    </div>
-                `;
-
-                tableBody.appendChild(row);
-            });
-        }
-
-        function updateAll() {
-            syncHeaderInputs();
-            renderEditor();
-            renderTable();
-            updateKPIs();
-        }
-
-        /* EXPORTAÇÃO EM IMAGEM JPEG HD */
-        function downloadAsJPEG() {
-            const btn = document.getElementById('btn-export');
-            const originalText = btn.innerHTML;
-            
-            // Alterar estado do botão durante processamento
-            btn.innerHTML = `
-                <svg class="animate-spin h-5 w-5 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Gerando JPEG...</span>
-            `;
-            btn.disabled = true;
-
-            const element = document.getElementById('schedule-card');
-
-            // Configurações do html2canvas para máxima clareza
-            const options = {
-                scale: 2, // Resolução HD de captura
-                backgroundColor: "#f1f5f9",
-                useCORS: true,
-                logging: false,
-                scrollX: 0,
-                scrollY: 0
-            };
-
-            setTimeout(() => {
-                html2canvas(element, options).then(canvas => {
-                    const imageData = canvas.toDataURL("image/jpeg", 0.95);
-                    
-                    const link = document.createElement('a');
-                    const dateStr = document.getElementById('input-date').value.replace(/\//g, '-');
-                    link.download = `Programacao_Limpeza_Fazenda_Oasis_${dateStr}.jpg`;
-                    link.href = imageData;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }).catch(err => {
-                    console.error("Erro ao gerar imagem:", err);
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                });
-            }, 250);
-        }
-
-        /* CARREGAR APLICAÇÃO AO INICIALIZAR */
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('input-title').addEventListener('input', syncHeaderInputs);
-            document.getElementById('input-week').addEventListener('input', syncHeaderInputs);
-            document.getElementById('input-date').addEventListener('input', syncHeaderInputs);
-            document.getElementById('input-footer').addEventListener('input', syncHeaderInputs);
-
-            loadSampleData();
-        });
     </script>
 </body>
 </html>

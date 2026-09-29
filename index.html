@@ -116,20 +116,27 @@
             <!-- Botões de Ação Principal -->
             <div class="flex flex-wrap items-center gap-2">
                 <button onclick="loadSampleData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
                     Modelo Padrão
                 </button>
                 <button onclick="loadCleaningRoutine()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     Rotina Completa
                 </button>
                 <button onclick="downloadAsJPEG()" id="btn-export" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-bold rounded-lg shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
                     <span>Baixar em JPEG</span>
                 </button>
@@ -140,52 +147,67 @@
     <main class="max-w-[1450px] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         <!-- PAINEL DE CONTROLE E FORMULÁRIO DE EDIÇÃO (4 colunas) -->
-        <section class="lg:col-span-4 space-y-6 bg-slate-900/95 border border-slate-800 p-5 rounded-2xl h-fit shadow-xl">
-            <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
-                <h2 class="text-base font-bold text-white flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        <section class="lg:col-span-4 space-y-6 bg-white border border-slate-200 p-5 rounded-2xl h-fit shadow-xl">
+            <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <h2 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
-                    Dados da Programação
+                    Painel de Preenchimento
                 </h2>
-                <span class="text-xs bg-teal-500/10 text-teal-300 px-2 py-0.5 rounded border border-teal-500/20 font-semibold">Oásis Sanidade</span>
+                <span class="text-xs bg-teal-50 text-teal-700 px-2 py-0.5 rounded border border-teal-200 font-bold shadow-sm">Oásis Sanidade</span>
             </div>
 
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Título Principal do Banner</label>
-                    <input type="text" id="input-title" value="PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                    <label class="block text-slate-700 font-bold mb-1 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
+                        Título Principal do Banner
+                    </label>
+                    <input type="text" id="input-title" value="PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white transition shadow-inner">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Semana (SEM.)</label>
-                        <input type="text" id="input-week" value="40" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                        <label class="block text-slate-700 font-bold mb-1 flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            Semana (SEM.)
+                        </label>
+                        <input type="text" id="input-week" value="40" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white transition shadow-inner">
                     </div>
                     <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Data da Operação</label>
-                        <input type="text" id="input-date" value="28/09/2026" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                        <label class="block text-slate-700 font-bold mb-1 flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            Data da Operação
+                        </label>
+                        <input type="text" id="input-date" value="28/09/2026" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white transition shadow-inner">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-slate-300 font-semibold mb-1">Rodapé / Unidade Responsável</label>
-                    <input type="text" id="input-footer" value="FAZENDA OÁSIS — SETOR DE HIGIENIZAÇÃO & CONTROLE AMBIENTAL" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-teal-500 transition">
+                    <label class="block text-slate-700 font-bold mb-1 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        Rodapé / Unidade Responsável
+                    </label>
+                    <input type="text" id="input-footer" value="FAZENDA OÁSIS — HIGIENIZAÇÃO" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white transition shadow-inner">
                 </div>
             </div>
 
-            <div class="border-t border-slate-800 pt-4">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
-                        <span>Tarefas de Limpeza</span>
-                        <span id="task-count-badge" class="bg-slate-800 text-teal-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            <div class="border-t border-slate-100 pt-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        Tarefas de Limpeza
+                        <span id="task-count-badge" class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-2 py-0.5 rounded-full font-bold shadow-sm">0</span>
                     </h3>
-                    <button onclick="addTaskRow()" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg hover:bg-emerald-500/20 font-bold transition flex items-center gap-1">
-                        + Nova Atividade
+                    <button onclick="addTaskRow()" class="text-xs bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1.5 rounded-lg hover:bg-teal-100 hover:border-teal-300 font-bold transition flex items-center gap-1 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Nova Atividade
                     </button>
                 </div>
 
-                <div id="tasks-editor-list" class="space-y-4 max-h-[520px] overflow-y-auto pr-1">
+                <div id="tasks-editor-list" class="space-y-4 max-h-[520px] overflow-y-auto pr-2 pb-2">
                     <!-- Gerado Dinamicamente via JavaScript -->
                 </div>
             </div>
@@ -331,7 +353,7 @@
                     <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center justify-between px-6">
                         <div class="flex items-center gap-2 text-slate-500 text-xs font-bold">
                             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span id="card-display-footer">FAZENDA OÁSIS — HIGIENIZAÇÃO & CONTROLE AMBIENTAL</span>
+                            <span id="card-display-footer">FAZENDA OÁSIS — HIGIENIZAÇÃO</span>
                         </div>
                         <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
                             Documento Operacional
@@ -364,7 +386,7 @@
             document.getElementById('input-title').value = "PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO";
             document.getElementById('input-week').value = "40";
             document.getElementById('input-date').value = "28/09/2026";
-            document.getElementById('input-footer').value = "FAZENDA OÁSIS — HIGIENIZAÇÃO & CONTROLE AMBIENTAL";
+            document.getElementById('input-footer').value = "FAZENDA OÁSIS — HIGIENIZAÇÃO";
 
             tasks = [
                 {
@@ -576,31 +598,32 @@
 
             tasks.forEach((task, index) => {
                 const card = document.createElement('div');
-                card.className = "bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-3 relative shadow-sm";
+                card.className = "bg-white border border-slate-200 rounded-xl p-4 space-y-3 relative shadow-sm hover:border-teal-300 transition-colors duration-200";
                 
                 card.innerHTML = `
-                    <div class="flex items-center justify-between text-xs font-bold text-teal-400 border-b border-slate-800 pb-2">
-                        <span class="flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+                    <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 border-b border-slate-100 pb-2.5">
+                        <span class="flex items-center gap-1.5 bg-slate-100 px-2 py-1 rounded text-slate-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-teal-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             Item #${index + 1}
                         </span>
-                        <button onclick="removeTaskRow(${task.id})" class="text-rose-400 hover:text-rose-300 text-[11px] font-semibold bg-rose-500/10 px-2.5 py-0.5 rounded border border-rose-500/20 transition">
+                        <button onclick="removeTaskRow(${task.id})" class="text-rose-600 hover:text-rose-700 hover:bg-rose-100 text-[11px] font-bold bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 transition shadow-sm flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             Excluir
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Frequência</label>
-                            <select onchange="updateTaskField(${task.id}, 'frequency', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-white font-bold focus:outline-none focus:border-teal-500 text-xs">
+                            <label class="block text-slate-600 font-bold mb-1">Frequência</label>
+                            <select onchange="updateTaskField(${task.id}, 'frequency', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-bold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white text-xs shadow-inner transition">
                                 <option value="DIÁRIA" ${task.frequency === 'DIÁRIA' ? 'selected' : ''}>LIMPEZA DIÁRIA</option>
                                 <option value="SEMANAL" ${task.frequency === 'SEMANAL' ? 'selected' : ''}>LIMPEZA SEMANAL</option>
                                 <option value="MENSAL" ${task.frequency === 'MENSAL' ? 'selected' : ''}>LIMPEZA MENSAL</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Status</label>
-                            <select onchange="updateTaskField(${task.id}, 'status', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-white font-bold focus:outline-none focus:border-teal-500 text-xs">
+                            <label class="block text-slate-600 font-bold mb-1">Status</label>
+                            <select onchange="updateTaskField(${task.id}, 'status', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-bold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white text-xs shadow-inner transition">
                                 <option value="PENDENTE" ${task.status === 'PENDENTE' ? 'selected' : ''}>PENDENTE</option>
                                 <option value="EM ANDAMENTO" ${task.status === 'EM ANDAMENTO' ? 'selected' : ''}>EM ANDAMENTO</option>
                                 <option value="CONCLUÍDO" ${task.status === 'CONCLUÍDO' ? 'selected' : ''}>CONCLUÍDO</option>
@@ -608,25 +631,25 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Iniciais Equipe</label>
-                            <input type="text" value="${task.initials}" oninput="updateTaskField(${task.id}, 'initials', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white uppercase text-center font-extrabold focus:outline-none focus:border-teal-500">
+                            <label class="block text-slate-600 font-bold mb-1">Iniciais Equipe</label>
+                            <input type="text" value="${task.initials}" oninput="updateTaskField(${task.id}, 'initials', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 uppercase text-center font-extrabold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition">
                         </div>
                         <div>
-                            <label class="block text-slate-400 font-semibold mb-1">Bloco / Setor / Local</label>
-                            <input type="text" value="${task.block}" oninput="updateTaskField(${task.id}, 'block', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white focus:outline-none focus:border-teal-500">
+                            <label class="block text-slate-600 font-bold mb-1">Bloco / Setor / Local</label>
+                            <input type="text" value="${task.block}" oninput="updateTaskField(${task.id}, 'block', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition">
                         </div>
                     </div>
 
                     <div class="text-xs">
-                        <label class="block text-slate-400 font-semibold mb-1">Serviço de Limpeza</label>
-                        <textarea oninput="updateTaskField(${task.id}, 'serviceName', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-teal-500" rows="2">${task.serviceName}</textarea>
+                        <label class="block text-slate-600 font-bold mb-1 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Serviço de Limpeza</label>
+                        <textarea oninput="updateTaskField(${task.id}, 'serviceName', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 text-slate-800 font-medium text-xs focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition" rows="2">${task.serviceName}</textarea>
                     </div>
 
                     <div class="text-xs">
-                        <label class="block text-slate-400 font-semibold mb-1">Colaboradores (Separados por vírgula)</label>
-                        <input type="text" value="${task.collaborators.join(', ')}" oninput="updateTaskField(${task.id}, 'collaborators', this.value)" class="w-full bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white text-xs focus:outline-none focus:border-teal-500" placeholder="Ex: João, Maria, Pedro">
+                        <label class="block text-slate-600 font-bold mb-1 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Colaboradores (Separados por vírgula)</label>
+                        <input type="text" value="${task.collaborators.join(', ')}" oninput="updateTaskField(${task.id}, 'collaborators', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 text-slate-800 font-medium text-xs focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition" placeholder="Ex: João, Maria, Pedro">
                     </div>
                 `;
 

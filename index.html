@@ -336,7 +336,7 @@
                         
                         <!-- Header da Tabela (Novo visual limpo e elegante) -->
                         <div class="bg-slate-800 text-slate-200 px-6 py-3.5 grid grid-cols-12 gap-4 text-[11px] font-extrabold tracking-wider uppercase border-b border-slate-700">
-                            <div class="col-span-3">FREQUÊNCIA & EQUIPE</div>
+                            <div class="col-span-3">FREQUÊNCIA & PRIORIDADE</div>
                             <div class="col-span-4">COLABORADORES DESIGNADOS</div>
                             <div class="col-span-3">SERVIÇO DE LIMPEZA & LOCAL</div>
                             <div class="col-span-2 text-center">STATUS</div>
@@ -371,16 +371,6 @@
         /* ESTADO INICIAL DA APLICAÇÃO */
         let tasks = [];
 
-        // Cores de fundo para os avatares das equipes
-        const avatarColors = [
-            { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-200' },
-            { bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-200' },
-            { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-200' },
-            { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200' },
-            { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-200' },
-            { bg: 'bg-indigo-100', text: 'text-indigo-800', border: 'border-indigo-200' }
-        ];
-
         /* CARREGAR MODELO PADRÃO COM A NOVA CLASSIFICAÇÃO */
         function loadSampleData() {
             document.getElementById('input-title').value = "PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO";
@@ -392,8 +382,7 @@
                 {
                     id: 1,
                     frequency: "DIÁRIA",
-                    initials: "EQ1",
-                    colorIndex: 0,
+                    priority: "1",
                     collaborators: ["Jucivan Xavier", "Jonas de Sousa", "Isaac de Oliveira"],
                     serviceName: "Lavagem e sanitização dos galpões de colheita e bancadas",
                     block: "GALPÃO PRINCIPAL",
@@ -402,8 +391,7 @@
                 {
                     id: 2,
                     frequency: "DIÁRIA",
-                    initials: "EQ2",
-                    colorIndex: 1,
+                    priority: "2",
                     collaborators: ["Manoel Messias", "Kauan Xavier", "João Batista"],
                     serviceName: "Higienização diária de caixas plásticas e utensílios",
                     block: "SETOR DE EMBALAGEM",
@@ -412,8 +400,7 @@
                 {
                     id: 3,
                     frequency: "SEMANAL",
-                    initials: "EQ3",
-                    colorIndex: 2,
+                    priority: "3",
                     collaborators: ["Eduardo Souza", "Antonio Adriano", "Janiel Lopes"],
                     serviceName: "Limpeza das bordas, roçagem e capina dos canteiros",
                     block: "BLOCO- 08 e BLOCO- 09",
@@ -422,8 +409,7 @@
                 {
                     id: 4,
                     frequency: "SEMANAL",
-                    initials: "EQ1",
-                    colorIndex: 0,
+                    priority: "4",
                     collaborators: ["Pedro Henrique", "Marcos de Lima"],
                     serviceName: "Desobststrução e limpeza de calhas e canais de drenagem",
                     block: "ESTUFAS 01 A 04",
@@ -432,8 +418,7 @@
                 {
                     id: 5,
                     frequency: "MENSAL",
-                    initials: "EQ4",
-                    colorIndex: 3,
+                    priority: "5",
                     collaborators: ["Mateus Lopes", "Jucivan Xavier", "Manoel Messias"],
                     serviceName: "Desinfecção profunda de reservatórios, filtros de irrigação e depósitos",
                     block: "SETOR DE IRRIGAÇÃO",
@@ -449,14 +434,13 @@
             document.getElementById('input-title').value = "CRONOGRAMA GERAL DE LIMPEZA E SANIDADE";
             document.getElementById('input-week').value = "41";
             document.getElementById('input-date').value = "05/10/2026";
-            document.getElementById('input-footer').value = "FAZENDA OÁSIS — UNIDADE OPERACIONAL SPG";
+            document.getElementById('input-footer').value = "FAZENDA OÁSIS — HIGIENIZAÇÃO";
 
             tasks = [
                 {
                     id: 1,
                     frequency: "DIÁRIA",
-                    initials: "EQ1",
-                    colorIndex: 0,
+                    priority: "1",
                     collaborators: ["Jucivan Xavier", "Pedro Henrique"],
                     serviceName: "Recolhimento diário de resíduos e limpeza da recepção de frutas",
                     block: "ÁREA DE RECEBIMENTO",
@@ -465,8 +449,7 @@
                 {
                     id: 2,
                     frequency: "DIÁRIA",
-                    initials: "EQ2",
-                    colorIndex: 1,
+                    priority: "2",
                     collaborators: ["Jonas de Sousa", "Janiel Lopes"],
                     serviceName: "Varreção e lavagem com sabão neutro das câmaras frias",
                     block: "CÂMARA FRIA 01 E 02",
@@ -475,8 +458,7 @@
                 {
                     id: 3,
                     frequency: "SEMANAL",
-                    initials: "EQ3",
-                    colorIndex: 2,
+                    priority: "3",
                     collaborators: ["Manoel Messias", "Kauan Xavier", "Marcos de Lima"],
                     serviceName: "Limpeza de telas anti-insetos e estruturas laterais",
                     block: "ESTUFA 03",
@@ -485,8 +467,7 @@
                 {
                     id: 4,
                     frequency: "SEMANAL",
-                    initials: "EQ4",
-                    colorIndex: 3,
+                    priority: "4",
                     collaborators: ["Eduardo Souza", "Antonio Adriano"],
                     serviceName: "Organização e higienização do depósito de fertilizantes",
                     block: "DEPÓSITO CENTRAL",
@@ -495,8 +476,7 @@
                 {
                     id: 5,
                     frequency: "MENSAL",
-                    initials: "EQ1",
-                    colorIndex: 0,
+                    priority: "5",
                     collaborators: ["Isaac de Oliveira", "Mateus Lopes"],
                     serviceName: "Lavagem e sanitização completa de tratores e carretas de colheita",
                     block: "PATIÔ DE MÁQUINAS",
@@ -505,8 +485,7 @@
                 {
                     id: 6,
                     frequency: "MENSAL",
-                    initials: "EQ2",
-                    colorIndex: 1,
+                    priority: "6",
                     collaborators: ["Jucivan Xavier", "Manoel Messias"],
                     serviceName: "Limpeza e pulverização sanitizante dos silos de armazenamento",
                     block: "SETOR DE SILOS",
@@ -523,8 +502,7 @@
             tasks.push({
                 id: newId,
                 frequency: "DIÁRIA",
-                initials: "EQ",
-                colorIndex: Math.floor(Math.random() * avatarColors.length),
+                priority: tasks.length + 1,
                 collaborators: ["Novo Colaborador"],
                 serviceName: "Nova atividade de limpeza",
                 block: "SETOR 01",
@@ -633,8 +611,8 @@
 
                     <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
-                            <label class="block text-slate-600 font-bold mb-1">Iniciais Equipe</label>
-                            <input type="text" value="${task.initials}" oninput="updateTaskField(${task.id}, 'initials', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 uppercase text-center font-extrabold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white shadow-inner transition">
+                            <label class="block text-slate-600 font-bold mb-1">Ordem (1, 2, 3...)</label>
+                            <input type="number" min="1" value="${task.priority}" oninput="updateTaskField(${task.id}, 'priority', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-slate-800 font-extrabold focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:bg-white text-xs shadow-inner transition">
                         </div>
                         <div>
                             <label class="block text-slate-600 font-bold mb-1">Bloco / Setor / Local</label>
@@ -679,20 +657,20 @@
                 if (task.status === "EM ANDAMENTO") statusClass = "status-badge-andamento";
                 if (task.status === "CONCLUÍDO") statusClass = "status-badge-concluido";
 
-                // Tema do Avatar
-                const colorTheme = avatarColors[task.colorIndex % avatarColors.length];
-
                 row.innerHTML = `
-                    <!-- Coluna 1: Frequência & Equipe -->
+                    <!-- Coluna 1: Frequência & Ordem -->
                     <div class="col-span-3 flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl ${colorTheme.bg} ${colorTheme.text} ${colorTheme.border} font-black text-xs flex items-center justify-center shrink-0 shadow-sm border">
-                            ${task.initials || 'EQ'}
+                        <div class="w-9 h-9 rounded-xl bg-slate-800 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-sm border border-slate-700" title="Ordem ${task.priority}">
+                            ${task.priority || ''}
                         </div>
                         <div class="space-y-1">
                             <div>
                                 <span class="inline-block ${freqClass} font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                                     ${task.frequency || 'DIÁRIA'}
                                 </span>
+                            </div>
+                            <div class="text-[9px] font-bold text-slate-500 uppercase tracking-tight">
+                                ORDEM ${task.priority || ''}
                             </div>
                         </div>
                     </div>

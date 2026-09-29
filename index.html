@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 px-4 py-3 shadow-xl">
+    <header class="bg-emerald-950 border-b border-emerald-900 sticky top-0 z-40 px-4 py-3 shadow-xl">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
                 <div class="bg-gradient-to-tr from-emerald-600 to-teal-400 text-slate-950 p-2.5 rounded-xl font-bold shadow-lg shadow-emerald-900/30">
@@ -168,11 +168,11 @@
 
             <!-- Botões de Ação Principal -->
             <div class="flex flex-wrap items-center gap-2">
-                <button onclick="window.logout()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5 mr-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <button onclick="window.logout()" class="px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     Trocar Perfil
                 </button>
-                <button onclick="window.loadSampleData()" class="admin-only px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5 hidden">
+                <button onclick="window.loadSampleData()" class="admin-only px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
@@ -182,7 +182,7 @@
                     </svg>
                     Modelo Padrão
                 </button>
-                <button onclick="window.loadCleaningRoutine()" class="admin-only px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5 hidden">
+                <button onclick="window.loadCleaningRoutine()" class="admin-only px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -295,9 +295,9 @@
                 <div id="schedule-card" class="preview-container p-6 md:p-8 rounded-2xl space-y-5 text-slate-800 min-w-[940px]">
                     
                     <!-- BANNER SUPERIOR DE CABEÇALHO -->
-                    <div class="bg-slate-900 rounded-2xl p-6 shadow-md border border-slate-800 text-white relative overflow-hidden">
-                        <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
-                        <div class="absolute right-32 -top-10 w-32 h-32 bg-teal-500/10 rounded-full blur-xl pointer-events-none"></div>
+                    <div class="bg-emerald-900 rounded-2xl p-6 shadow-md border border-emerald-800 text-white relative overflow-hidden">
+                        <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute right-32 -top-10 w-32 h-32 bg-teal-500/20 rounded-full blur-xl pointer-events-none"></div>
 
                         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
@@ -308,13 +308,13 @@
                                 <h1 id="card-display-title" class="text-2xl md:text-3xl font-black text-white tracking-wide uppercase leading-tight">
                                     PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO
                                 </h1>
-                                <p class="text-slate-400 text-xs font-semibold mt-1">
+                                <p class="text-emerald-100/70 text-xs font-semibold mt-1">
                                     FAZENDA OÁSIS — PLANO OPERACIONAL DE LIMPEZA
                                 </p>
                             </div>
 
-                            <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3 text-right shrink-0">
-                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">PERÍODO / DATA</div>
+                            <div class="bg-emerald-950/50 border border-emerald-800/80 rounded-xl p-3 text-right shrink-0">
+                                <div class="text-[10px] font-bold text-emerald-200/70 uppercase tracking-widest">PERÍODO / DATA</div>
                                 <div class="text-sm font-extrabold text-teal-300 mt-0.5">
                                     SEM. <span id="card-display-week">40</span> • <span id="card-display-date">28/09/2026</span>
                                 </div>
@@ -391,7 +391,7 @@
 
                     <!-- TABELA DE ATIVIDADES -->
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div class="bg-slate-800 text-slate-200 px-6 py-3.5 grid grid-cols-12 gap-4 text-[11px] font-extrabold tracking-wider uppercase border-b border-slate-700">
+                        <div class="bg-emerald-800 text-emerald-50 px-6 py-3.5 grid grid-cols-12 gap-4 text-[11px] font-extrabold tracking-wider uppercase border-b border-emerald-700">
                             <div class="col-span-3">FREQUÊNCIA & PRIORIDADE</div>
                             <div class="col-span-4">COLABORADORES DESIGNADOS</div>
                             <div class="col-span-3">SERVIÇO DE LIMPEZA & LOCAL</div>
@@ -425,6 +425,7 @@
         /* ESTADO INICIAL DA APLICAÇÃO */
         let tasks = [];
         let currentUserRole = null; // 'admin' ou 'colaborador'
+        window.lastResetWeek = 0;
         
         let app, auth, db, userId;
         let isDataLoaded = false;
@@ -567,7 +568,8 @@
                         week: document.getElementById('input-week').value,
                         date: document.getElementById('input-date').value,
                         footer: document.getElementById('input-footer').value,
-                        tasks: tasks
+                        tasks: tasks,
+                        lastResetWeek: window.lastResetWeek || 0
                     };
                     await setDoc(docRef, state);
                 } catch (e) {
@@ -590,12 +592,50 @@
                     document.getElementById('input-week').value = data.week || "";
                     document.getElementById('input-date').value = data.date || "";
                     document.getElementById('input-footer').value = data.footer || "";
+                    window.lastResetWeek = data.lastResetWeek || 0;
                     
                     if (data.tasks && Array.isArray(data.tasks) && data.tasks.length > 0) {
                         tasks = data.tasks;
                     }
                     
-                    if(currentUserRole) window.updateAll(false);
+                    // Rotina de reset automático semanal
+                    const now = new Date();
+                    const getISOWeek = (date) => {
+                        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                        const dayNum = d.getUTCDay() || 7;
+                        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+                        const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+                        return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+                    };
+                    const currentWeek = getISOWeek(now);
+                    const currentYear = now.getFullYear();
+                    const weekId = parseInt(`${currentYear}${currentWeek.toString().padStart(2, '0')}`);
+
+                    let shouldSave = false;
+                    if (window.lastResetWeek !== weekId) {
+                        // Reseta as tarefas caso a semana tenha virado (Nova segunda-feira/nova semana)
+                        if (tasks.length > 0) {
+                            tasks.forEach(t => t.status = 'PENDENTE');
+                            window.lastResetWeek = weekId;
+                            
+                            // Atualiza a visualização da semana
+                            document.getElementById('input-week').value = currentWeek;
+                            
+                            // Calcula e atualiza para a data da segunda-feira atual
+                            const d = new Date();
+                            const day = d.getDay();
+                            const diff = d.getDate() - day + (day == 0 ? -6 : 1);
+                            const monday = new Date(d.setDate(diff));
+                            const dd = String(monday.getDate()).padStart(2, '0');
+                            const mm = String(monday.getMonth() + 1).padStart(2, '0');
+                            const yyyy = monday.getFullYear();
+                            document.getElementById('input-date').value = `${dd}/${mm}/${yyyy}`;
+                            
+                            shouldSave = true; // Avisa que houve reset e precisa salvar
+                        }
+                    }
+                    
+                    if(currentUserRole) window.updateAll(shouldSave);
                 } else {
                     window.loadSampleData(); 
                 }

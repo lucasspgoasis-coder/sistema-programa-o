@@ -837,7 +837,7 @@
             });
         };
 
-        /* ACÕES DAS TAREFAS */
+        /* ACÕES DAS TAREFAS E CORREÇÃO DE FOCO */
         window.addTaskRow = function() {
             const newId = Date.now();
             tasks.push({
@@ -858,13 +858,21 @@
             window.updateAll();
         };
 
+        /* ESTA É A FUNÇÃO CORRIGIDA PARA NÃO PERDER O FOCO DOS CAMPOS DE TEXTO */
         window.updateTaskField = function(id, field, value) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
+            let needsEditorRender = false;
+
             // Se mudou para semanal e ainda não tiver um dia padrão salvo
-            if (field === 'frequency' && value === 'SEMANAL' && !task.dayOfWeek) {
-                task.dayOfWeek = 'SEGUNDA';
+            if (field === 'frequency') {
+                if (value === 'SEMANAL' && !task.dayOfWeek) {
+                    task.dayOfWeek = 'SEGUNDA';
+                }
+                // Precisamos re-renderizar o editor APENAS quando a frequência muda,
+                // para exibir ou ocultar a caixa de seleção de "Dia da Semana".
+                needsEditorRender = true;
             }
 
             if (field === 'collaborators') {
@@ -875,7 +883,18 @@
                 task[field] = value;
             }
 
-            window.updateAll();
+            // Ao invés de usar updateAll() que recria toda a caixa do lado esquerdo (e perde o foco),
+            // nós atualizamos separadamente as partes de visualização e mantemos os inputs do usuário intactos!
+            window.syncHeaderInputs();
+            window.updateKPIs();
+            window.renderTable();
+            
+            // Só recria o painel de edição se for estritamente necessário (como mudar de Diário para Semanal)
+            if (needsEditorRender) {
+                window.renderEditor();
+            }
+            
+            window.saveDataToCloud();
         };
 
         // Reset global visível apenas para o administrador

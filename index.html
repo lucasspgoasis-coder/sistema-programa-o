@@ -6,16 +6,16 @@
     <title>Programação de Limpeza — Fazenda Oásis</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2canvas for JPEG export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- html-to-image CDN for high-fidelity image export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
     
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
             background-color: #0b132b;
             color: #f8fafc;
         }
@@ -24,8 +24,40 @@
         .preview-container {
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             width: 100%;
-            max-width: 1240px;
+            max-width: 1420px;
             margin: 0 auto;
+        }
+
+        /* Indicadores de Cor Estritamente Circulares */
+        .color-dot {
+            width: 8px;
+            height: 8px;
+            min-width: 8px;
+            min-height: 8px;
+            border-radius: 9999px !important;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* Regras Base para Alinhamento e LARGURA FIXA UNIFORME em Etiquetas */
+        .badge-base {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+            white-space: nowrap;
+            vertical-align: middle;
+            box-sizing: border-box;
+            width: 140px;
+            min-width: 140px;
+            max-width: 140px;
+            padding: 6px 10px;
+            border-radius: 9999px; /* Formato Pílula / Circular nas pontas */
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            gap: 6px;
         }
 
         /* Badges de Frequência de Limpeza */
@@ -53,21 +85,7 @@
             border: 1px solid #ffedd5;
         }
 
-        /* Tag de Colaboradores */
-        .collaborator-tag {
-            background-color: #ffffff;
-            color: #334155;
-            font-weight: 600;
-            font-size: 0.72rem;
-            padding: 0.2rem 0.55rem;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-            display: inline-flex;
-            align-items: center;
-        }
-
-        /* Badges de Status Operacional */
+        /* Badges de Status Operacional com MESMA LARGURA (140px) */
         .status-badge-pendente {
             background-color: #fff7ed;
             color: #c2410c;
@@ -84,6 +102,51 @@
             background-color: #f0fdf4;
             color: #15803d;
             border: 1px solid #bbf7d0;
+        }
+
+        /* Badge de Prioridade com MESMA LARGURA (140px) */
+        .badge-priority {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+            white-space: nowrap;
+            box-sizing: border-box;
+            width: 140px;
+            min-width: 140px;
+            max-width: 140px;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 9px;
+            font-weight: 800;
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            gap: 5px;
+        }
+
+        /* Tag de Colaboradores com Cantos Arredondados Circulares */
+        .collaborator-tag {
+            background-color: #ffffff;
+            color: #334155;
+            font-weight: 700;
+            font-size: 0.72rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px; /* Circulares */
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.35;
+            white-space: nowrap;
+            vertical-align: middle;
+            margin: 2px 0;
+        }
+
+        /* Prevenção de Sobreposição de Texto no Canvas */
+        #schedule-card * {
+            box-sizing: border-box;
         }
 
         /* Scrollbars elegantes */
@@ -106,7 +169,7 @@
     <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-900/95 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden border border-slate-200">
             <div class="text-center mb-8">
-                <div class="inline-flex bg-teal-100 p-4 rounded-2xl mb-4 text-teal-600">
+                <div class="inline-flex bg-teal-100 p-4 rounded-full mb-4 text-teal-600">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 </div>
                 <h2 class="text-2xl font-black text-slate-800 tracking-tight">Controle de Acesso</h2>
@@ -123,7 +186,7 @@
                 </button>
                 <button onclick="window.loginAs('colaborador')" class="flex flex-col items-center gap-3 p-5 border-2 border-slate-100 bg-slate-50 rounded-2xl hover:border-emerald-500 hover:bg-emerald-50 transition shadow-sm">
                     <div class="bg-emerald-100 p-3 rounded-full text-emerald-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 1 0 7.75"></path></svg>
                     </div>
                     <span class="font-bold text-slate-700 text-sm">Colaborador</span>
                 </button>
@@ -148,10 +211,16 @@
         </div>
     </div>
 
+    <!-- NOTIFICAÇÃO DE TOAST PERSONALIZADA -->
+    <div id="toast-notification" class="fixed top-5 right-5 z-[150] hidden bg-slate-800 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 flex items-center gap-3 transition-all">
+        <span id="toast-icon"></span>
+        <span id="toast-message" class="text-sm font-semibold"></span>
+    </div>
+
     <header class="bg-emerald-950 border-b border-emerald-900 sticky top-0 z-40 px-4 py-3 shadow-xl">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-tr from-emerald-600 to-teal-400 text-slate-950 p-2.5 rounded-xl font-bold shadow-lg shadow-emerald-900/30">
+                <div class="bg-gradient-to-tr from-emerald-600 to-teal-400 text-slate-950 p-2.5 rounded-full font-bold shadow-lg shadow-emerald-900/30">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                     </svg>
@@ -159,7 +228,7 @@
                 <div>
                     <h1 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
                         Fazenda Oásis
-                        <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold px-2 py-0.5 rounded-md">Gestão de Limpeza</span>
+                        <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold px-2 py-0.5 rounded-full">Gestão de Limpeza</span>
                         <span id="role-badge" class="hidden text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full font-bold uppercase ml-2 border border-slate-600"></span>
                     </h1>
                     <p class="text-xs text-slate-400">Cronograma Classificado por Frequências: Diária, Semanal e Mensal</p>
@@ -189,7 +258,7 @@
                     </svg>
                     Rotina Completa
                 </button>
-                <button onclick="window.downloadAsJPEG()" id="btn-export" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-bold rounded-lg shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
+                <button onclick="window.downloadAsJPEG()" id="btn-export" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-bold rounded-xl shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -213,7 +282,7 @@
                     </svg>
                     Painel de Preenchimento
                 </h2>
-                <span class="text-xs bg-teal-50 text-teal-700 px-2 py-0.5 rounded border border-teal-200 font-bold shadow-sm">Oásis Sanidade</span>
+                <span class="text-xs bg-teal-50 text-teal-700 px-2.5 py-0.5 rounded-full border border-teal-200 font-bold shadow-sm">Oásis Sanidade</span>
             </div>
 
             <div class="space-y-4 text-xs">
@@ -260,12 +329,12 @@
                     </h3>
                     <div class="flex items-center gap-2">
                         <!-- Botão Resetar Status Global (Apenas Admin) -->
-                        <button onclick="window.resetStatuses()" class="admin-only text-xs bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1.5 rounded-lg hover:bg-orange-100 hover:border-orange-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
+                        <button onclick="window.resetStatuses()" class="admin-only text-xs bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1.5 rounded-full hover:bg-orange-100 hover:border-orange-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
                             Resetar
                         </button>
                         <!-- Botão Nova Atividade (Apenas Admin) -->
-                        <button onclick="window.addTaskRow()" class="admin-only text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg hover:bg-emerald-100 hover:border-emerald-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
+                        <button onclick="window.addTaskRow()" class="admin-only text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full hover:bg-emerald-100 hover:border-emerald-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Nova
                         </button>
@@ -284,132 +353,133 @@
             <div class="flex items-center justify-between text-slate-300 text-xs px-1">
                 <span class="flex items-center gap-2 font-medium">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Modelo de Visualização em Alta Resolução (Será exportado exatamente como exibido)
+                    Modelo de Visualização em Alta Resolução (Processamento Vetorial Html-To-Image)
                 </span>
                 <span class="text-slate-500 font-semibold">Formato JPEG HD</span>
             </div>
 
             <div class="overflow-x-auto rounded-2xl shadow-2xl border border-slate-800 bg-slate-950 p-2 md:p-4">
                 
-                <!-- CONTAINER PRINCIPAL CAPTURADO PELO HTML2CANVAS -->
-                <div id="schedule-card" class="preview-container p-6 md:p-8 rounded-2xl space-y-5 text-slate-800 min-w-[940px]">
+                <!-- CONTAINER COM MARGEM PARA EXPORTAÇÃO (PAISAGEM) -->
+                <div id="export-frame" class="bg-white p-8 md:p-12 min-w-[1400px]">
                     
-                    <!-- BANNER SUPERIOR DE CABEÇALHO -->
-                    <div class="bg-emerald-900 rounded-2xl p-6 shadow-md border border-emerald-800 text-white relative overflow-hidden">
-                        <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
-                        <div class="absolute right-32 -top-10 w-32 h-32 bg-teal-500/20 rounded-full blur-xl pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div>
-                                <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 border border-emerald-500/30">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                    Sanidade & Higienização Agrícola
+                    <!-- CONTAINER PRINCIPAL CAPTURADO PELO HTML-TO-IMAGE -->
+                    <div id="schedule-card" class="preview-container p-6 md:p-8 rounded-2xl space-y-5 text-slate-800 border border-slate-200">
+                        
+                        <!-- BANNER SUPERIOR DE CABEÇALHO -->
+                        <div class="bg-emerald-900 rounded-2xl p-6 shadow-md border border-emerald-800 text-white relative overflow-hidden">
+                            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="flex-1 min-w-0 pr-4">
+                                    <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 border border-emerald-500/30">
+                                        <span class="color-dot bg-emerald-400"></span>
+                                        Sanidade & Higienização Agrícola
+                                    </div>
+                                    <h1 id="card-display-title" class="text-2xl md:text-3xl font-black text-white tracking-wide uppercase leading-snug whitespace-nowrap overflow-hidden text-ellipsis">
+                                        PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO
+                                    </h1>
+                                    <p class="text-emerald-100/80 text-xs font-semibold mt-1 leading-snug whitespace-nowrap overflow-hidden text-ellipsis">
+                                        FAZENDA OÁSIS — PLANO OPERACIONAL DE LIMPEZA
+                                    </p>
                                 </div>
-                                <h1 id="card-display-title" class="text-2xl md:text-3xl font-black text-white tracking-wide uppercase leading-tight">
-                                    PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO
-                                </h1>
-                                <p class="text-emerald-100/70 text-xs font-semibold mt-1">
-                                    FAZENDA OÁSIS — PLANO OPERACIONAL DE LIMPEZA
-                                </p>
-                            </div>
 
-                            <div class="bg-emerald-950/50 border border-emerald-800/80 rounded-xl p-3 text-right shrink-0">
-                                <div class="text-[10px] font-bold text-emerald-200/70 uppercase tracking-widest">PERÍODO / DATA</div>
-                                <div class="text-sm font-extrabold text-teal-300 mt-0.5">
-                                    SEM. <span id="card-display-week">40</span> • <span id="card-display-date">28/09/2026</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DASHBOARD DE MÉTRICAS E INDICADORES (KPIs) -->
-                    <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
-                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div>
-                                <div id="kpi-total" class="text-xl font-black text-slate-900 leading-none">0</div>
-                                <div class="text-[10px] font-bold text-slate-600 uppercase tracking-tight mt-1">TOTAL TAREFAS</div>
-                                <div class="text-[9px] text-slate-400 leading-none">Programadas</div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-emerald-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-black text-xs">DIA</div>
-                            <div>
-                                <div id="kpi-diaria" class="text-xl font-black text-emerald-700 leading-none">0</div>
-                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA DIÁRIA</div>
-                                <div id="kpi-diaria-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-blue-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-black text-xs">SEM</div>
-                            <div>
-                                <div id="kpi-semanal" class="text-xl font-black text-blue-700 leading-none">0</div>
-                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA SEMANAL</div>
-                                <div id="kpi-semanal-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-orange-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center shrink-0 font-black text-xs">15D</div>
-                            <div>
-                                <div id="kpi-quinzenal" class="text-xl font-black text-orange-700 leading-none">0</div>
-                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMP. QUINZENAL</div>
-                                <div id="kpi-quinzenal-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-purple-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-black text-xs">MES</div>
-                            <div>
-                                <div id="kpi-mensal" class="text-xl font-black text-purple-700 leading-none">0</div>
-                                <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-1">LIMPEZA MENSAL</div>
-                                <div id="kpi-mensal-pct" class="text-[9px] text-slate-400 leading-none">0% do total</div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="w-full">
-                                <div id="kpi-conclusao-pct" class="text-xl font-black text-slate-900 leading-none">0%</div>
-                                <div class="text-[10px] font-bold text-slate-600 uppercase tracking-tight mt-1">CONCLUÍDAS</div>
-                                <div class="w-full bg-slate-100 rounded-full h-1.5 mt-1.5 overflow-hidden">
-                                    <div id="kpi-progress-bar" class="bg-emerald-500 h-1.5 rounded-full" style="width: 0%"></div>
+                                <div class="bg-emerald-950/50 border border-emerald-800/80 rounded-xl p-3.5 text-right shrink-0">
+                                    <div class="text-[10px] font-bold text-emerald-200/80 uppercase tracking-widest leading-snug">PERÍODO / DATA</div>
+                                    <div class="text-sm font-extrabold text-teal-300 mt-1 leading-snug">
+                                        SEM. <span id="card-display-week">40</span> • <span id="card-display-date">28/09/2026</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- TABELA DE ATIVIDADES -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div class="bg-emerald-800 text-emerald-50 px-6 py-3.5 grid grid-cols-12 gap-4 text-[11px] font-extrabold tracking-wider uppercase border-b border-emerald-700">
-                            <div class="col-span-3">FREQUÊNCIA & PRIORIDADE</div>
-                            <div class="col-span-4">COLABORADORES DESIGNADOS</div>
-                            <div class="col-span-3">SERVIÇO DE LIMPEZA & LOCAL</div>
-                            <div class="col-span-2 text-center">STATUS</div>
-                        </div>
-                        <div id="table-body" class="divide-y divide-slate-100">
-                            <!-- Gerado Dinamicamente -->
-                        </div>
-                    </div>
+                        <!-- DASHBOARD DE MÉTRICAS E INDICADORES (KPIs) COM ÍCONES CIRCULARES -->
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div id="kpi-total" class="text-xl font-black text-slate-900 leading-snug">0</div>
+                                    <div class="text-[10px] font-bold text-slate-600 uppercase tracking-tight mt-0.5 leading-snug">TOTAL TAREFAS</div>
+                                    <div class="text-[9px] text-slate-400 leading-snug">Programadas</div>
+                                </div>
+                            </div>
 
-                    <!-- RODAPÉ COMPACTO DO CARD -->
-                    <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center justify-between px-6">
-                        <div class="flex items-center gap-2 text-slate-500 text-xs font-bold">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span id="card-display-footer">FAZENDA OÁSIS — HIGIENIZAÇÃO</span>
+                            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-emerald-100 flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-black text-xs">DIA</div>
+                                <div>
+                                    <div id="kpi-diaria" class="text-xl font-black text-emerald-700 leading-snug">0</div>
+                                    <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-0.5 leading-snug">LIMPEZA DIAR.</div>
+                                    <div id="kpi-diaria-pct" class="text-[9px] text-slate-400 leading-snug">0% do total</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-blue-100 flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-black text-xs">SEM</div>
+                                <div>
+                                    <div id="kpi-semanal" class="text-xl font-black text-blue-700 leading-snug">0</div>
+                                    <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-0.5 leading-snug">LIMPEZA SEMANAL</div>
+                                    <div id="kpi-semanal-pct" class="text-[9px] text-slate-400 leading-snug">0% do total</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-orange-100 flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center shrink-0 font-black text-xs">15D</div>
+                                <div>
+                                    <div id="kpi-quinzenal" class="text-xl font-black text-orange-700 leading-snug">0</div>
+                                    <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-0.5 leading-snug">LIMP. QUINZENAL</div>
+                                    <div id="kpi-quinzenal-pct" class="text-[9px] text-slate-400 leading-snug">0% do total</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-purple-100 flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-black text-xs">MES</div>
+                                <div>
+                                    <div id="kpi-mensal" class="text-xl font-black text-purple-700 leading-snug">0</div>
+                                    <div class="text-[10px] font-bold text-slate-700 uppercase tracking-tight mt-0.5 leading-snug">LIMPEZA MENSAL</div>
+                                    <div id="kpi-mensal-pct" class="text-[9px] text-slate-400 leading-snug">0% do total</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="w-full">
+                                    <div id="kpi-conclusao-pct" class="text-xl font-black text-slate-900 leading-snug">0%</div>
+                                    <div class="text-[10px] font-bold text-slate-600 uppercase tracking-tight mt-0.5 leading-snug">CONCLUÍDAS</div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 mt-1.5 overflow-hidden">
+                                        <div id="kpi-progress-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                            Documento Operacional
+
+                        <!-- TABELA DE ATIVIDADES -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="bg-emerald-800 text-emerald-50 px-6 py-3.5 grid grid-cols-12 gap-4 text-[11px] font-extrabold tracking-wider uppercase border-b border-emerald-700 items-center leading-normal">
+                                <div class="col-span-2">FREQUÊNCIA & PRIORIDADE</div>
+                                <div class="col-span-4">COLABORADORES DESIGNADOS</div>
+                                <div class="col-span-4">SERVIÇO DE LIMPEZA & LOCAL</div>
+                                <div class="col-span-2 text-center">STATUS</div>
+                            </div>
+                            <div id="table-body" class="divide-y divide-slate-100">
+                                <!-- Gerado Dinamicamente via JS -->
+                            </div>
+                        </div>
+
+                        <!-- RODAPÉ COMPACTO DO CARD -->
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex items-center justify-between px-6">
+                            <div class="flex items-center gap-2 text-slate-500 text-xs font-bold leading-normal min-w-0">
+                                <span class="color-dot bg-emerald-500 shrink-0"></span>
+                                <span id="card-display-footer" class="whitespace-nowrap overflow-hidden text-ellipsis">FAZENDA OÁSIS — HIGIENIZAÇÃO</span>
+                            </div>
+                            <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest leading-normal shrink-0">
+                                Documento Operacional
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -432,6 +502,30 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'fazenda-oasis';
         let saveTimeout;
 
+        /* UTILITÁRIO DE TOAST/NOTIFICAÇÃO SEM UTILIZAR ALERT() */
+        window.showToast = function(message, type = 'info') {
+            const toast = document.getElementById('toast-notification');
+            const icon = document.getElementById('toast-icon');
+            const msg = document.getElementById('toast-message');
+            
+            if (!toast) return;
+
+            if (type === 'error') {
+                icon.innerHTML = `<svg class="h-5 w-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+            } else if (type === 'success') {
+                icon.innerHTML = `<svg class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
+            } else {
+                icon.innerHTML = `<svg class="h-5 w-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+            }
+            
+            msg.innerText = message;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        };
+
         /* INIT EVENTS */
         window.onload = function() {
             document.getElementById('input-title').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
@@ -440,7 +534,6 @@
             document.getElementById('input-footer').addEventListener('input', () => { window.syncHeaderInputs(); window.saveDataToCloud(); });
         };
 
-        // Firebase Inicialização
         try {
             const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
             if (firebaseConfig) {
@@ -499,7 +592,6 @@
                 const user = document.getElementById('admin-user').value;
                 const pass = document.getElementById('admin-pass').value;
                 
-                // Credenciais solicitadas na instrução
                 if (user === 'adm123' && pass === 'lucas@2026') {
                     currentUserRole = 'admin';
                     document.getElementById('login-screen').classList.add('hidden');
@@ -561,7 +653,6 @@
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
                 try {
-                    // Utilizando a rota pública para que Administrador e Colaborador leiam do mesmo arquivo central
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
                     const state = {
                         title: document.getElementById('input-title').value,
@@ -582,7 +673,6 @@
         window.loadDataFromCloud = async function() {
             if (!db || !userId) return;
             try {
-                // Utilizando a rota pública 
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
                 const docSnap = await getDoc(docRef);
                 
@@ -613,15 +703,11 @@
 
                     let shouldSave = false;
                     if (window.lastResetWeek !== weekId) {
-                        // Reseta as tarefas caso a semana tenha virado (Nova segunda-feira/nova semana)
                         if (tasks.length > 0) {
                             tasks.forEach(t => t.status = 'PENDENTE');
                             window.lastResetWeek = weekId;
-                            
-                            // Atualiza a visualização da semana
                             document.getElementById('input-week').value = currentWeek;
                             
-                            // Calcula e atualiza para a data da segunda-feira atual
                             const d = new Date();
                             const day = d.getDay();
                             const diff = d.getDate() - day + (day == 0 ? -6 : 1);
@@ -631,7 +717,7 @@
                             const yyyy = monday.getFullYear();
                             document.getElementById('input-date').value = `${dd}/${mm}/${yyyy}`;
                             
-                            shouldSave = true; // Avisa que houve reset e precisa salvar
+                            shouldSave = true;
                         }
                     }
                     
@@ -711,12 +797,12 @@
                 
                 card.innerHTML = `
                     <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 border-b border-slate-100 pb-2.5">
-                        <span class="flex items-center gap-1.5 bg-slate-100 px-2 py-1 rounded text-slate-600">
+                        <span class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full text-slate-600">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             Item #${index + 1}
                         </span>
                         ${isAdmin ? `
-                        <button onclick="window.removeTaskRow(${task.id})" class="text-rose-600 hover:text-rose-700 hover:bg-rose-100 text-[11px] font-bold bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 transition shadow-sm flex items-center gap-1">
+                        <button onclick="window.removeTaskRow(${task.id})" class="text-rose-600 hover:text-rose-700 hover:bg-rose-100 text-[11px] font-bold bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 transition shadow-sm flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             Excluir
                         </button>` : ''}
@@ -781,7 +867,7 @@
             });
         };
 
-        /* RENDER TABLE PREVIEW */
+        /* RENDER TABLE PREVIEW COM ETIQUETAS DE MESMA LARGURA E TEXTOS COMPLETOS */
         window.renderTable = function() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
@@ -790,46 +876,58 @@
 
             sortedTasks.forEach(task => {
                 let freqBadge = '';
+                
                 if (task.frequency === 'DIÁRIA') {
-                    freqBadge = `<span class="badge-freq-diaria px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>DIÁRIA</span>`;
+                    freqBadge = `<span class="badge-base badge-freq-diaria"><span class="color-dot bg-emerald-500"></span><span>DIÁRIA</span></span>`;
                 } else if (task.frequency === 'SEMANAL') {
                     const dayOfWeek = task.dayOfWeek || 'SEGUNDA';
-                    freqBadge = `<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm border-2 border-white ring-1 ring-blue-200"></span><span class="badge-freq-semanal px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-blue-300">SEMANAL</span><span class="text-[10px] font-black text-blue-600 tracking-wider ml-0.5">${dayOfWeek}</span></div>`;
+                    freqBadge = `
+                        <div class="flex flex-col gap-1 items-start">
+                            <span class="badge-base badge-freq-semanal"><span class="color-dot bg-blue-500"></span><span>SEMANAL</span></span>
+                            <span class="badge-priority bg-blue-50 text-blue-700 border-blue-200"><span class="color-dot bg-blue-500"></span><span>${dayOfWeek}</span></span>
+                        </div>`;
                 } else if (task.frequency === 'QUINZENAL') {
-                    freqBadge = `<span class="badge-freq-quinzenal px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>QUINZENAL</span>`;
+                    freqBadge = `<span class="badge-base badge-freq-quinzenal"><span class="color-dot bg-orange-500"></span><span>QUINZENAL</span></span>`;
                 } else if (task.frequency === 'MENSAL') {
-                    freqBadge = `<span class="badge-freq-mensal px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>MENSAL</span>`;
+                    freqBadge = `<span class="badge-base badge-freq-mensal"><span class="color-dot bg-purple-500"></span><span>MENSAL</span></span>`;
                 }
 
+                let priorityBadge = `<span class="badge-priority"><span class="color-dot bg-slate-400"></span><span>PRIORIDADE #${task.priority}</span></span>`;
+
                 let statusBadge = '';
+
                 if (task.status === 'PENDENTE') {
-                    statusBadge = `<span class="status-badge-pendente px-2 py-1 rounded text-[10px] font-bold uppercase flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>PENDENTE</span>`;
+                    statusBadge = `<span class="badge-base status-badge-pendente"><span class="color-dot bg-orange-500"></span><span>PENDENTE</span></span>`;
                 } else if (task.status === 'EM ANDAMENTO') {
-                    statusBadge = `<span class="status-badge-andamento px-2 py-1 rounded text-[10px] font-bold uppercase flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>ANDAMENTO</span>`;
+                    statusBadge = `<span class="badge-base status-badge-andamento"><span class="color-dot bg-sky-500"></span><span>ANDAMENTO</span></span>`;
                 } else if (task.status === 'CONCLUÍDO') {
-                    statusBadge = `<span class="status-badge-concluido px-2 py-1 rounded text-[10px] font-bold uppercase flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>CONCLUÍDO</span>`;
+                    statusBadge = `<span class="badge-base status-badge-concluido"><span class="color-dot bg-emerald-500"></span><span>CONCLUÍDO</span></span>`;
                 }
 
                 let collabsHtml = (task.collaborators || []).map(c => `<span class="collaborator-tag">${c}</span>`).join(' ');
 
                 const row = document.createElement('div');
-                row.className = "px-6 py-4 grid grid-cols-12 gap-4 items-center hover:bg-slate-50 transition-colors";
+                // AQUI ESTÁ A CORREÇÃO: "py-5" para dar mais espaço de altura nas linhas
+                row.className = "px-6 py-5 grid grid-cols-12 gap-4 items-center hover:bg-slate-50 transition-colors";
+                
+                // AQUI ESTÁ A CORREÇÃO: Removidos "whitespace-nowrap overflow-hidden text-ellipsis" 
+                // para permitir a quebra de linha. Modificado "leading-normal" para "leading-relaxed".
                 row.innerHTML = `
-                    <div class="col-span-3 flex flex-col gap-1.5 items-start">
+                    <div class="col-span-2 flex flex-col gap-1.5 items-start justify-center">
                         ${freqBadge}
-                        <div class="text-[10px] text-slate-400 font-bold ml-1">PRIORIDADE #${task.priority}</div>
+                        ${task.frequency !== 'SEMANAL' ? priorityBadge : ''}
                     </div>
-                    <div class="col-span-4 flex flex-wrap gap-1">
+                    <div class="col-span-4 flex flex-wrap gap-1.5 items-center">
                         ${collabsHtml}
                     </div>
-                    <div class="col-span-3">
-                        <div class="text-[11px] font-extrabold text-slate-800 leading-tight uppercase">${task.serviceName}</div>
-                        <div class="text-[10px] font-bold text-slate-500 mt-1 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            ${task.block}
+                    <div class="col-span-4 flex flex-col justify-center py-1">
+                        <div class="text-[11px] font-extrabold text-slate-800 leading-relaxed uppercase pr-2">${task.serviceName}</div>
+                        <div class="text-[10px] font-bold text-slate-500 mt-2 flex items-start gap-1.5 leading-relaxed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span>${task.block}</span>
                         </div>
                     </div>
-                    <div class="col-span-2 flex justify-center">
+                    <div class="col-span-2 flex justify-center items-center">
                         ${statusBadge}
                     </div>
                 `;
@@ -837,7 +935,7 @@
             });
         };
 
-        /* ACÕES DAS TAREFAS E CORREÇÃO DE FOCO */
+        /* AÇÕES DAS TAREFAS */
         window.addTaskRow = function() {
             const newId = Date.now();
             tasks.push({
@@ -858,20 +956,16 @@
             window.updateAll();
         };
 
-        /* ESTA É A FUNÇÃO CORRIGIDA PARA NÃO PERDER O FOCO DOS CAMPOS DE TEXTO */
         window.updateTaskField = function(id, field, value) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
             let needsEditorRender = false;
 
-            // Se mudou para semanal e ainda não tiver um dia padrão salvo
             if (field === 'frequency') {
                 if (value === 'SEMANAL' && !task.dayOfWeek) {
                     task.dayOfWeek = 'SEGUNDA';
                 }
-                // Precisamos re-renderizar o editor APENAS quando a frequência muda,
-                // para exibir ou ocultar a caixa de seleção de "Dia da Semana".
                 needsEditorRender = true;
             }
 
@@ -883,13 +977,10 @@
                 task[field] = value;
             }
 
-            // Ao invés de usar updateAll() que recria toda a caixa do lado esquerdo (e perde o foco),
-            // nós atualizamos separadamente as partes de visualização e mantemos os inputs do usuário intactos!
             window.syncHeaderInputs();
             window.updateKPIs();
             window.renderTable();
             
-            // Só recria o painel de edição se for estritamente necessário (como mudar de Diário para Semanal)
             if (needsEditorRender) {
                 window.renderEditor();
             }
@@ -897,24 +988,55 @@
             window.saveDataToCloud();
         };
 
-        // Reset global visível apenas para o administrador
         window.resetStatuses = function() {
             tasks.forEach(t => t.status = 'PENDENTE');
             window.updateAll();
+            window.showToast("Status de todas as tarefas foram resetados para PENDENTE.", "info");
         };
 
-        /* EXPORTAÇÃO */
+        /* EXPORTAÇÃO UTILIZANDO HTML-TO-IMAGE COM PREVENÇÃO DE CORRUPÇÃO DE TEXTO */
         window.downloadAsJPEG = function() {
-            const card = document.getElementById('schedule-card');
-            html2canvas(card, { scale: 2 }).then(canvas => {
+            const frame = document.getElementById('export-frame');
+            const btn = document.getElementById('btn-export');
+            if (!frame || !btn) return;
+
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Gerando Imagem HD...</span>
+            `;
+
+            window.htmlToImage.toJpeg(frame, {
+                quality: 0.95,
+                backgroundColor: '#ffffff',
+                pixelRatio: 2,
+                cacheBust: true,
+                fontEmbedCSS: '',
+                skipFonts: true
+            })
+            .then(function (dataUrl) {
                 const link = document.createElement('a');
-                link.download = `Programacao_Limpeza_Semana_${document.getElementById('input-week').value}.jpeg`;
-                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                const weekVal = document.getElementById('input-week').value || '00';
+                link.download = `Programacao_Limpeza_Semana_${weekVal}.jpeg`;
+                link.href = dataUrl;
                 link.click();
+                window.showToast("Relatório JPEG gerado e baixado com sucesso!", "success");
+            })
+            .catch(function (error) {
+                console.error('Erro na exportação com html-to-image:', error);
+                window.showToast("Falha ao gerar a imagem JPEG. Tente novamente.", "error");
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
             });
         };
 
-        /* MODELOS BASE (Caso não haja dados na nuvem) */
+        /* MODELOS BASE */
         window.loadSampleData = function() {
             document.getElementById('input-title').value = "PROGRAMAÇÃO DE LIMPEZA E SANITIZAÇÃO";
             document.getElementById('input-week').value = "40";

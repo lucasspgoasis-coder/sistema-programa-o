@@ -241,7 +241,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     Trocar Perfil
                 </button>
-                <button onclick="window.loadSampleData()" class="admin-only px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 hidden">
+                <button onclick="window.saveAsDefaultModel()" class="admin-only px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
@@ -249,7 +249,14 @@
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Modelo Padrão
+                    Salvar Modelo Padrão
+                </button>
+                <button onclick="window.restoreDefaultModel()" class="admin-only px-3 py-2 bg-teal-900 hover:bg-teal-800 text-teal-100 text-xs font-semibold rounded-lg border border-teal-800 transition flex items-center gap-1.5 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                        <polyline points="3 3 3 8 8 8"></polyline>
+                    </svg>
+                    Recuperar Modelo Salvo
                 </button>
                 <button onclick="window.loadCleaningRoutine()" class="admin-only px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -490,7 +497,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         /* ESTADO INICIAL DA APLICAÇÃO */
         let tasks = [];
@@ -501,63 +508,6 @@
         let isDataLoaded = false;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'fazenda-oasis';
         let saveTimeout;
-        let historySaveTimeout;
-        let lastHistoryHash = '';
-        let lastHistorySavedAt = 0;
-        const LOCAL_STATE_KEY = 'fazendaOasisState_v2';
-        const HISTORY_INTERVAL_MS = 30000;
-
-        function buildCurrentState() {
-            return {
-                title: document.getElementById('input-title').value,
-                week: document.getElementById('input-week').value,
-                date: document.getElementById('input-date').value,
-                footer: document.getElementById('input-footer').value,
-                tasks: JSON.parse(JSON.stringify(tasks)),
-                lastResetWeek: window.lastResetWeek || 0
-            };
-        }
-
-        function saveLocalState(state) {
-            try {
-                localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify(state));
-            } catch (e) {
-                console.warn('Não foi possível salvar no armazenamento local.', e);
-            }
-        }
-
-        function loadLocalState() {
-            try {
-                const raw = localStorage.getItem(LOCAL_STATE_KEY);
-                return raw ? JSON.parse(raw) : null;
-            } catch (e) {
-                console.warn('Não foi possível carregar o armazenamento local.', e);
-                return null;
-            }
-        }
-
-        async function savePermanentHistory(state, reason = 'alteracao') {
-            if (!db || !userId) return;
-            try {
-                const hash = JSON.stringify(state);
-                const now = Date.now();
-                // Não cria dezenas de versões enquanto o administrador está digitando.
-                if (hash === lastHistoryHash && (now - lastHistorySavedAt) < HISTORY_INTERVAL_MS) return;
-                lastHistoryHash = hash;
-                lastHistorySavedAt = now;
-
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'schedules', 'history'), {
-                    ...state,
-                    savedAt: serverTimestamp(),
-                    savedAtClient: new Date().toISOString(),
-                    savedByRole: currentUserRole || 'sistema',
-                    savedByUserId: userId,
-                    reason
-                });
-            } catch (e) {
-                console.error('Erro ao registrar histórico permanente:', e);
-            }
-        }
 
         /* UTILITÁRIO DE TOAST/NOTIFICAÇÃO SEM UTILIZAR ALERT() */
         window.showToast = function(message, type = 'info') {
@@ -720,48 +670,131 @@
         };
 
         /* FUNÇÃO PARA SALVAR NA NUVEM */
-        window.saveDataToCloud = async function(reason = 'alteracao') {
-            const state = buildCurrentState();
-            // Cópia local garante que atualizar/fechar a página não apague os dados neste aparelho.
-            saveLocalState(state);
+        /* SALVAMENTO: NUVEM + CÓPIA LOCAL DE SEGURANÇA */
+        window.buildCurrentState = function() {
+            return {
+                title: document.getElementById('input-title').value,
+                week: document.getElementById('input-week').value,
+                date: document.getElementById('input-date').value,
+                footer: document.getElementById('input-footer').value,
+                tasks: JSON.parse(JSON.stringify(tasks)),
+                lastResetWeek: window.lastResetWeek || 0,
+                savedAt: new Date().toISOString()
+            };
+        };
+
+        window.saveLocalBackup = function(state = null) {
+            try {
+                const data = state || window.buildCurrentState();
+                localStorage.setItem('fazendaOasisLastData', JSON.stringify(data));
+                return true;
+            } catch (e) {
+                console.warn("Não foi possível salvar a cópia local:", e);
+                return false;
+            }
+        };
+
+        window.saveDataToCloud = async function() {
+            const localState = window.buildCurrentState();
+            // Sempre mantém uma cópia local, mesmo se o Firebase estiver indisponível.
+            window.saveLocalBackup(localState);
 
             if (!db || !userId || !isDataLoaded) return;
-            
+
             clearTimeout(saveTimeout);
-            clearTimeout(historySaveTimeout);
             saveTimeout = setTimeout(async () => {
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
-                    await setDoc(docRef, state, { merge: true });
-
-                    // O estado atual fica disponível para todos os perfis/dispositivos.
-                    // O histórico é somente acrescentado; registros anteriores não são sobrescritos.
-                    historySaveTimeout = setTimeout(() => savePermanentHistory(state, reason), 250);
+                    await setDoc(docRef, localState);
                 } catch (e) {
-                    console.error("Erro ao salvar progresso:", e);
+                    console.error("Erro ao salvar progresso na nuvem. A cópia local continua disponível:", e);
                 }
             }, 800);
         };
 
-        /* FUNÇÃO PARA CARREGAR DA NUVEM COM ATUALIZAÇÃO EM TEMPO REAL */
-        window.loadDataFromCloud = async function() {
-            // Mostra imediatamente o último estado deste aparelho enquanto a nuvem carrega.
-            const localState = loadLocalState();
-            if (localState) {
-                document.getElementById('input-title').value = localState.title || '';
-                document.getElementById('input-week').value = localState.week || '';
-                document.getElementById('input-date').value = localState.date || '';
-                document.getElementById('input-footer').value = localState.footer || '';
-                tasks = Array.isArray(localState.tasks) ? localState.tasks : [];
-                window.lastResetWeek = localState.lastResetWeek || 0;
-                if (currentUserRole) {
-                    window.syncHeaderInputs();
-                    window.updateKPIs();
-                    window.renderEditor();
-                    window.renderTable();
-                }
+        /* SALVA MANUALMENTE OS DADOS ATUAIS COMO MODELO PADRÃO */
+        window.saveAsDefaultModel = async function() {
+            if (currentUserRole !== 'admin') {
+                window.showToast("Somente o administrador pode salvar o Modelo Padrão.", "error");
+                return;
             }
 
+            const state = window.buildCurrentState();
+            state.isDefaultModel = true;
+            state.savedAt = new Date().toISOString();
+
+            try {
+                localStorage.setItem('fazendaOasisDefaultModel', JSON.stringify(state));
+                // Também salva imediatamente na nuvem, sem esperar o temporizador.
+                if (db && userId && isDataLoaded) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'default_model');
+                    await setDoc(docRef, state);
+                }
+                window.saveLocalBackup(state);
+                window.showToast("Dados salvos no Modelo Padrão. Agora podem ser recuperados após atualizar a página.", "success");
+            } catch (e) {
+                console.error("Erro ao salvar Modelo Padrão:", e);
+                window.showToast("Não foi possível salvar o Modelo Padrão.", "error");
+            }
+        };
+
+        /* RECUPERA O MODELO MANUALMENTE SALVO */
+        window.restoreDefaultModel = async function() {
+            if (currentUserRole !== 'admin') {
+                window.showToast("Somente o administrador pode recuperar o Modelo Padrão.", "error");
+                return;
+            }
+
+            try {
+                let state = null;
+
+                // Primeiro tenta a cópia local, que funciona mesmo sem internet.
+                const local = localStorage.getItem('fazendaOasisDefaultModel');
+                if (local) state = JSON.parse(local);
+
+                // Se houver nuvem disponível, tenta o modelo salvo na nuvem.
+                if (db && userId) {
+                    try {
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'default_model');
+                        const snap = await getDoc(docRef);
+                        if (snap.exists()) state = snap.data();
+                    } catch (cloudError) {
+                        console.warn("Nuvem indisponível; usando modelo local:", cloudError);
+                    }
+                }
+
+                if (!state || !Array.isArray(state.tasks)) {
+                    window.showToast("Ainda não existe um Modelo Padrão salvo.", "info");
+                    return;
+                }
+
+                document.getElementById('input-title').value = state.title || "";
+                document.getElementById('input-week').value = state.week || "";
+                document.getElementById('input-date').value = state.date || "";
+                document.getElementById('input-footer').value = state.footer || "";
+                tasks = JSON.parse(JSON.stringify(state.tasks));
+                window.lastResetWeek = state.lastResetWeek || 0;
+
+                window.updateAll(false);
+                window.saveLocalBackup(window.buildCurrentState());
+
+                // Sincroniza a recuperação também no documento principal.
+                if (db && userId && isDataLoaded) {
+                    clearTimeout(saveTimeout);
+                    const mainRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
+                    await setDoc(mainRef, window.buildCurrentState());
+                }
+
+                window.showToast("Modelo Padrão recuperado com sucesso.", "success");
+            } catch (e) {
+                console.error("Erro ao recuperar Modelo Padrão:", e);
+                window.showToast("Erro ao recuperar o Modelo Padrão.", "error");
+            }
+        };
+
+
+        /* FUNÇÃO PARA CARREGAR DA NUVEM COM ATUALIZAÇÃO EM TEMPO REAL */
+        window.loadDataFromCloud = async function() {
             if (!db || !userId) return;
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
@@ -849,9 +882,27 @@
                             }
                         }
                     } else {
-                        // Primeiro acesso: cria o modelo somente uma vez. Depois disso, nunca substitui dados existentes.
-                        const local = loadLocalState();
-                        if (currentUserRole && !local) {
+                        if (currentUserRole) {
+                            // Recupera automaticamente a última cópia local antes de cair no modelo fixo.
+                            try {
+                                const local = localStorage.getItem('fazendaOasisLastData') || localStorage.getItem('fazendaOasisDefaultModel');
+                                if (local) {
+                                    const state = JSON.parse(local);
+                                    if (state && Array.isArray(state.tasks)) {
+                                        document.getElementById('input-title').value = state.title || "";
+                                        document.getElementById('input-week').value = state.week || "";
+                                        document.getElementById('input-date').value = state.date || "";
+                                        document.getElementById('input-footer').value = state.footer || "";
+                                        tasks = JSON.parse(JSON.stringify(state.tasks));
+                                        window.lastResetWeek = state.lastResetWeek || 0;
+                                        window.updateAll(false);
+                                        window.showToast("Dados recuperados da cópia salva.", "success");
+                                        return;
+                                    }
+                                }
+                            } catch (localError) {
+                                console.warn("Falha ao recuperar cópia local:", localError);
+                            }
                             window.loadSampleData();
                         }
                     }
@@ -866,8 +917,6 @@
         };
 
         window.logout = function() {
-            // Os dados já foram salvos na nuvem e no armazenamento local; sair não os apaga.
-            try { saveLocalState(buildCurrentState()); } catch(e) {}
             currentUserRole = null;
             try { localStorage.removeItem('fazendaOasisRole'); } catch(e) {}
             document.getElementById('login-screen').classList.remove('hidden');
@@ -875,12 +924,12 @@
         };
 
         /* UPDATE ALL UI */
-        window.updateAll = function(save = true, reason = 'alteracao') {
+        window.updateAll = function(save = true) {
             window.syncHeaderInputs();
             window.updateKPIs();
             window.renderEditor();
             window.renderTable();
-            if (save) window.saveDataToCloud(reason);
+            if (save) window.saveDataToCloud();
         };
 
         /* CABEÇALHOS */
@@ -1085,12 +1134,12 @@
                 block: "SETOR 01",
                 status: "PENDENTE"
             });
-            window.updateAll(true, 'nova_tarefa');
+            window.updateAll();
         };
 
         window.removeTaskRow = function(id) {
             tasks = tasks.filter(t => t.id !== id);
-            window.updateAll(true, 'exclusao_tarefa');
+            window.updateAll();
         };
 
         window.updateTaskField = function(id, field, value) {
@@ -1122,7 +1171,7 @@
                 window.renderEditor();
             }
             
-            window.saveDataToCloud('tarefa_alterada');
+            window.saveDataToCloud();
         };
 
         window.resetStatuses = function() {

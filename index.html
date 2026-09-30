@@ -176,38 +176,17 @@
                 <p class="text-slate-500 text-sm mt-1 font-medium">Selecione seu perfil para continuar</p>
             </div>
 
-            <!-- Seleção de Perfil -->
-            <div class="grid grid-cols-2 gap-4 mb-2" id="role-selection">
-                <button onclick="window.selectRole('admin')" class="flex flex-col items-center gap-3 p-5 border-2 border-slate-100 bg-slate-50 rounded-2xl hover:border-teal-500 hover:bg-teal-50 transition shadow-sm">
-                    <div class="bg-teal-100 p-3 rounded-full text-teal-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                    </div>
-                    <span class="font-bold text-slate-700 text-sm">Administrador</span>
-                </button>
-                <button onclick="window.loginAs('colaborador')" class="flex flex-col items-center gap-3 p-5 border-2 border-slate-100 bg-slate-50 rounded-2xl hover:border-emerald-500 hover:bg-emerald-50 transition shadow-sm">
+            <!-- Entrada única como Colaborador -->
+            <div class="mb-2" id="role-selection">
+                <button onclick="window.loginAs('colaborador')" class="w-full flex flex-col items-center gap-3 p-5 border-2 border-emerald-200 bg-emerald-50 rounded-2xl hover:border-emerald-500 hover:bg-emerald-100 transition shadow-sm">
                     <div class="bg-emerald-100 p-3 rounded-full text-emerald-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 1 0 7.75"></path></svg>
                     </div>
-                    <span class="font-bold text-slate-700 text-sm">Colaborador</span>
+                    <span class="font-bold text-slate-700 text-sm">Entrar como Colaborador</span>
+                    <span class="text-xs text-slate-500">Editar e preencher todas as informações</span>
                 </button>
             </div>
 
-            <!-- Formulário Admin -->
-            <div id="admin-login-form" class="hidden space-y-4">
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Login</label>
-                    <input type="text" id="admin-user" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition shadow-inner" placeholder="Digite seu login">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Senha</label>
-                    <input type="password" id="admin-pass" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition shadow-inner" placeholder="••••••••">
-                </div>
-                <div class="flex gap-3 pt-4">
-                    <button onclick="window.cancelAdminLogin()" class="w-1/3 px-4 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition text-sm">Voltar</button>
-                    <button onclick="window.loginAs('admin')" class="w-2/3 px-4 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-bold rounded-xl hover:from-teal-600 hover:to-emerald-600 transition text-sm shadow-md shadow-teal-500/20">Acessar Sistema</button>
-                </div>
-                <p id="login-error" class="text-rose-500 text-sm text-center font-bold hidden bg-rose-50 py-2 rounded-lg border border-rose-100 mt-4">Credenciais incorretas!</p>
-            </div>
         </div>
     </div>
 
@@ -241,7 +220,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     Trocar Perfil
                 </button>
-                <button onclick="window.saveAsDefaultModel()" class="admin-only px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 hidden">
+                <button onclick="window.loadSampleData()" class="px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
@@ -249,16 +228,9 @@
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Salvar Modelo Padrão
+                    Modelo Padrão
                 </button>
-                <button id="restore-default-model-btn" onclick="window.restoreDefaultModel()" class="px-3 py-2 bg-teal-900 hover:bg-teal-800 text-teal-100 text-xs font-semibold rounded-lg border border-teal-800 transition flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 12a9 9 0 1 0 3-6.7"></path>
-                        <polyline points="3 3 3 8 8 8"></polyline>
-                    </svg>
-                    Recuperar Modelo Salvo
-                </button>
-                <button onclick="window.loadCleaningRoutine()" class="admin-only px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5 hidden">
+                <button onclick="window.loadCleaningRoutine()" class="px-3 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold rounded-lg border border-emerald-800 transition flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -335,13 +307,13 @@
                         <span id="task-count-badge" class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-2 py-0.5 rounded-full font-bold shadow-sm">0</span>
                     </h3>
                     <div class="flex items-center gap-2">
-                        <!-- Botão Resetar Status Global (Apenas Admin) -->
-                        <button onclick="window.resetStatuses()" class="admin-only text-xs bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1.5 rounded-full hover:bg-orange-100 hover:border-orange-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
+                        <!-- Botão Resetar Status Global -->
+                        <button onclick="window.resetStatuses()" class="text-xs bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1.5 rounded-full hover:bg-orange-100 hover:border-orange-300 font-bold transition flex items-center gap-1 shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
                             Resetar
                         </button>
-                        <!-- Botão Nova Atividade (Apenas Admin) -->
-                        <button onclick="window.addTaskRow()" class="admin-only text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full hover:bg-emerald-100 hover:border-emerald-300 font-bold transition flex items-center gap-1 shadow-sm hidden">
+                        <!-- Botão Nova Atividade -->
+                        <button onclick="window.addTaskRow()" class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full hover:bg-emerald-100 hover:border-emerald-300 font-bold transition flex items-center gap-1 shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Nova
                         </button>
@@ -579,12 +551,13 @@
             isDataLoaded = true;
         }
 
-        /* LOGICA DE LOGIN E ROLES */
+        /* LOGIN: ACESSO ÚNICO COMO COLABORADOR */
         window.checkSavedLogin = function() {
             try {
                 const savedRole = localStorage.getItem('fazendaOasisRole');
                 if (savedRole === 'admin' || savedRole === 'colaborador') {
-                    currentUserRole = savedRole;
+                    currentUserRole = 'colaborador';
+                    localStorage.setItem('fazendaOasisRole', 'colaborador');
                     document.getElementById('login-screen').classList.add('hidden');
                     window.applyRoleRestrictions();
                 }
@@ -593,213 +566,62 @@
             }
         };
 
-        window.selectRole = function(role) {
-            if (role === 'admin') {
-                document.getElementById('role-selection').classList.add('hidden');
-                document.getElementById('admin-login-form').classList.remove('hidden');
-            }
-        };
-
-        window.cancelAdminLogin = function() {
-            document.getElementById('admin-login-form').classList.add('hidden');
-            document.getElementById('role-selection').classList.remove('hidden');
-            document.getElementById('login-error').classList.add('hidden');
-            document.getElementById('admin-user').value = '';
-            document.getElementById('admin-pass').value = '';
-        };
-
         window.loginAs = function(role) {
-            if (role === 'admin') {
-                const user = document.getElementById('admin-user').value;
-                const pass = document.getElementById('admin-pass').value;
-                
-                if (user === 'adm123' && pass === 'lucas@2026') {
-                    currentUserRole = 'admin';
-                    try { localStorage.setItem('fazendaOasisRole', 'admin'); } catch(e) {}
-                    document.getElementById('login-screen').classList.add('hidden');
-                    window.applyRoleRestrictions();
-                } else {
-                    document.getElementById('login-error').classList.remove('hidden');
-                }
-            } else if (role === 'colaborador') {
-                currentUserRole = 'colaborador';
-                try { localStorage.setItem('fazendaOasisRole', 'colaborador'); } catch(e) {}
-                document.getElementById('login-screen').classList.add('hidden');
-                window.applyRoleRestrictions();
-            }
+            currentUserRole = 'colaborador';
+            try { localStorage.setItem('fazendaOasisRole', 'colaborador'); } catch(e) {}
+            document.getElementById('login-screen').classList.add('hidden');
+            window.applyRoleRestrictions();
         };
 
         window.applyRoleRestrictions = function() {
-            const isAdmin = currentUserRole === 'admin';
-            
-            // Badge no topo
+            // O único perfil do sistema é Colaborador e ele pode editar tudo.
+            currentUserRole = 'colaborador';
+
             const roleBadge = document.getElementById('role-badge');
             roleBadge.classList.remove('hidden');
-            roleBadge.innerText = isAdmin ? 'Acesso: Administrador' : 'Acesso: Colaborador';
-            
-            // Desativar inputs do cabeçalho para colaboradores
-            document.getElementById('input-title').disabled = !isAdmin;
-            document.getElementById('input-week').disabled = !isAdmin;
-            document.getElementById('input-date').disabled = !isAdmin;
-            document.getElementById('input-footer').disabled = !isAdmin;
-            
+            roleBadge.innerText = 'Acesso: Colaborador';
+
+            // Todos os campos do cabeçalho ficam editáveis para o colaborador.
             const topInputs = ['input-title', 'input-week', 'input-date', 'input-footer'];
             topInputs.forEach(id => {
                 const el = document.getElementById(id);
-                if (!isAdmin) {
-                    el.classList.add('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
-                    el.classList.remove('bg-slate-50', 'bg-white');
-                } else {
-                    el.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
-                    el.classList.add('bg-slate-50');
-                }
+                if (!el) return;
+                el.disabled = false;
+                el.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
+                el.classList.add('bg-slate-50');
             });
 
-            // O botão de recuperação fica disponível para ADMIN e COLABORADOR.
-            // Ele não pertence à classe admin-only para continuar visível após sair/entrar novamente.
-            const restoreButton = document.getElementById('restore-default-model-btn');
-            if (restoreButton) {
-                restoreButton.classList.remove('hidden');
-                restoreButton.style.display = '';
-            }
-
-            // Ocultar botões admin-only
-            const adminButtons = document.querySelectorAll('.admin-only');
-            adminButtons.forEach(btn => {
-                if (!isAdmin) {
-                    btn.classList.add('hidden');
-                } else {
-                    btn.classList.remove('hidden');
-                }
+            // Todos os botões de edição ficam disponíveis para o colaborador.
+            document.querySelectorAll('.admin-only').forEach(btn => {
+                btn.classList.remove('hidden');
+                btn.classList.remove('admin-only');
             });
 
-            // Re-renderiza tudo para aplicar restrições no editor
             window.updateAll(false);
         };
 
         /* FUNÇÃO PARA SALVAR NA NUVEM */
-        /* SALVAMENTO: NUVEM + CÓPIA LOCAL DE SEGURANÇA */
-        window.buildCurrentState = function() {
-            return {
-                title: document.getElementById('input-title').value,
-                week: document.getElementById('input-week').value,
-                date: document.getElementById('input-date').value,
-                footer: document.getElementById('input-footer').value,
-                tasks: JSON.parse(JSON.stringify(tasks)),
-                lastResetWeek: window.lastResetWeek || 0,
-                savedAt: new Date().toISOString()
-            };
-        };
-
-        window.saveLocalBackup = function(state = null) {
-            try {
-                const data = state || window.buildCurrentState();
-                localStorage.setItem('fazendaOasisLastData', JSON.stringify(data));
-                return true;
-            } catch (e) {
-                console.warn("Não foi possível salvar a cópia local:", e);
-                return false;
-            }
-        };
-
         window.saveDataToCloud = async function() {
-            const localState = window.buildCurrentState();
-            // Sempre mantém uma cópia local, mesmo se o Firebase estiver indisponível.
-            window.saveLocalBackup(localState);
-
             if (!db || !userId || !isDataLoaded) return;
-
+            
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
-                    await setDoc(docRef, localState);
+                    const state = {
+                        title: document.getElementById('input-title').value,
+                        week: document.getElementById('input-week').value,
+                        date: document.getElementById('input-date').value,
+                        footer: document.getElementById('input-footer').value,
+                        tasks: tasks,
+                        lastResetWeek: window.lastResetWeek || 0
+                    };
+                    await setDoc(docRef, state);
                 } catch (e) {
-                    console.error("Erro ao salvar progresso na nuvem. A cópia local continua disponível:", e);
+                    console.error("Erro ao salvar progresso:", e);
                 }
             }, 800);
         };
-
-        /* SALVA MANUALMENTE OS DADOS ATUAIS COMO MODELO PADRÃO */
-        window.saveAsDefaultModel = async function() {
-            if (currentUserRole !== 'admin') {
-                window.showToast("Somente o administrador pode salvar o Modelo Padrão.", "error");
-                return;
-            }
-
-            const state = window.buildCurrentState();
-            state.isDefaultModel = true;
-            state.savedAt = new Date().toISOString();
-
-            try {
-                localStorage.setItem('fazendaOasisDefaultModel', JSON.stringify(state));
-                // Também salva imediatamente na nuvem, sem esperar o temporizador.
-                if (db && userId && isDataLoaded) {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'default_model');
-                    await setDoc(docRef, state);
-                }
-                window.saveLocalBackup(state);
-                window.showToast("Dados salvos no Modelo Padrão. Agora podem ser recuperados após atualizar a página.", "success");
-            } catch (e) {
-                console.error("Erro ao salvar Modelo Padrão:", e);
-                window.showToast("Não foi possível salvar o Modelo Padrão.", "error");
-            }
-        };
-
-        /* RECUPERA O MODELO MANUALMENTE SALVO */
-        window.restoreDefaultModel = async function() {
-            if (currentUserRole !== 'admin' && currentUserRole !== 'colaborador') {
-                window.showToast("Faça login para recuperar o Modelo Padrão.", "error");
-                return;
-            }
-
-            try {
-                let state = null;
-
-                // Primeiro tenta a cópia local, que funciona mesmo sem internet.
-                const local = localStorage.getItem('fazendaOasisDefaultModel');
-                if (local) state = JSON.parse(local);
-
-                // Se houver nuvem disponível, tenta o modelo salvo na nuvem.
-                if (db && userId) {
-                    try {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'default_model');
-                        const snap = await getDoc(docRef);
-                        if (snap.exists()) state = snap.data();
-                    } catch (cloudError) {
-                        console.warn("Nuvem indisponível; usando modelo local:", cloudError);
-                    }
-                }
-
-                if (!state || !Array.isArray(state.tasks)) {
-                    window.showToast("Ainda não existe um Modelo Padrão salvo.", "info");
-                    return;
-                }
-
-                document.getElementById('input-title').value = state.title || "";
-                document.getElementById('input-week').value = state.week || "";
-                document.getElementById('input-date').value = state.date || "";
-                document.getElementById('input-footer').value = state.footer || "";
-                tasks = JSON.parse(JSON.stringify(state.tasks));
-                window.lastResetWeek = state.lastResetWeek || 0;
-
-                window.updateAll(false);
-                window.saveLocalBackup(window.buildCurrentState());
-
-                // Sincroniza a recuperação também no documento principal.
-                if (db && userId && isDataLoaded) {
-                    clearTimeout(saveTimeout);
-                    const mainRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
-                    await setDoc(mainRef, window.buildCurrentState());
-                }
-
-                window.showToast("Modelo Padrão recuperado com sucesso.", "success");
-            } catch (e) {
-                console.error("Erro ao recuperar Modelo Padrão:", e);
-                window.showToast("Erro ao recuperar o Modelo Padrão.", "error");
-            }
-        };
-
 
         /* FUNÇÃO PARA CARREGAR DA NUVEM COM ATUALIZAÇÃO EM TEMPO REAL */
         window.loadDataFromCloud = async function() {
@@ -813,7 +635,7 @@
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         
-                        // Elemento ativo para não perder o foco caso o admin esteja digitando
+                        // Elemento ativo para não perder o foco enquanto o colaborador estiver digitando
                         const activeEl = document.activeElement;
                         const isEditorFocused = activeEl && document.getElementById('tasks-editor-list') && document.getElementById('tasks-editor-list').contains(activeEl);
 
@@ -879,7 +701,7 @@
                             window.syncHeaderInputs();
                             window.updateKPIs();
                             
-                            // Se o administrador está editando um texto na lista (foco no editor), não re-renderizamos a lista para não perder o cursor
+                            // Se o colaborador está editando um texto na lista, não re-renderizamos a lista para não perder o cursor
                             if (!isEditorFocused) {
                                 window.renderEditor();
                             }
@@ -890,29 +712,7 @@
                             }
                         }
                     } else {
-                        if (currentUserRole) {
-                            // Recupera automaticamente a última cópia local antes de cair no modelo fixo.
-                            try {
-                                const local = localStorage.getItem('fazendaOasisLastData') || localStorage.getItem('fazendaOasisDefaultModel');
-                                if (local) {
-                                    const state = JSON.parse(local);
-                                    if (state && Array.isArray(state.tasks)) {
-                                        document.getElementById('input-title').value = state.title || "";
-                                        document.getElementById('input-week').value = state.week || "";
-                                        document.getElementById('input-date').value = state.date || "";
-                                        document.getElementById('input-footer').value = state.footer || "";
-                                        tasks = JSON.parse(JSON.stringify(state.tasks));
-                                        window.lastResetWeek = state.lastResetWeek || 0;
-                                        window.updateAll(false);
-                                        window.showToast("Dados recuperados da cópia salva.", "success");
-                                        return;
-                                    }
-                                }
-                            } catch (localError) {
-                                console.warn("Falha ao recuperar cópia local:", localError);
-                            }
-                            window.loadSampleData();
-                        }
+                        if(currentUserRole) window.loadSampleData(); 
                     }
                 }, (error) => {
                     console.error("Erro no onSnapshot:", error);
@@ -981,9 +781,9 @@
             const container = document.getElementById('tasks-editor-list');
             container.innerHTML = '';
             
-            const isAdmin = currentUserRole === 'admin';
-            const disabledAttr = isAdmin ? '' : 'disabled';
-            const readonlyClass = isAdmin ? '' : 'opacity-60 cursor-not-allowed bg-slate-100';
+            const isAdmin = false;
+            const disabledAttr = '';
+            const readonlyClass = '';
 
             tasks.forEach((task, index) => {
                 const card = document.createElement('div');
@@ -995,11 +795,10 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             Item #${index + 1}
                         </span>
-                        ${isAdmin ? `
                         <button onclick="window.removeTaskRow(${task.id})" class="text-rose-600 hover:text-rose-700 hover:bg-rose-100 text-[11px] font-bold bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 transition shadow-sm flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             Excluir
-                        </button>` : ''}
+                        </button>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3 text-xs">

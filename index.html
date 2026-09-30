@@ -251,7 +251,7 @@
                     </svg>
                     Salvar Modelo Padrão
                 </button>
-                <button onclick="window.restoreDefaultModel()" class="px-3 py-2 bg-teal-900 hover:bg-teal-800 text-teal-100 text-xs font-semibold rounded-lg border border-teal-800 transition flex items-center gap-1.5 hidden">
+                <button id="restore-default-model-btn" onclick="window.restoreDefaultModel()" class="px-3 py-2 bg-teal-900 hover:bg-teal-800 text-teal-100 text-xs font-semibold rounded-lg border border-teal-800 transition flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 12a9 9 0 1 0 3-6.7"></path>
                         <polyline points="3 3 3 8 8 8"></polyline>
@@ -654,6 +654,14 @@
                     el.classList.add('bg-slate-50');
                 }
             });
+
+            // O botão de recuperação fica disponível para ADMIN e COLABORADOR.
+            // Ele não pertence à classe admin-only para continuar visível após sair/entrar novamente.
+            const restoreButton = document.getElementById('restore-default-model-btn');
+            if (restoreButton) {
+                restoreButton.classList.remove('hidden');
+                restoreButton.style.display = '';
+            }
 
             // Ocultar botões admin-only
             const adminButtons = document.querySelectorAll('.admin-only');

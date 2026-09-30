@@ -490,7 +490,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         /* ESTADO INICIAL DA APLICAÇÃO */
         let tasks = [];
@@ -501,6 +501,63 @@
         let isDataLoaded = false;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'fazenda-oasis';
         let saveTimeout;
+        let historySaveTimeout;
+        let lastHistoryHash = '';
+        let lastHistorySavedAt = 0;
+        const LOCAL_STATE_KEY = 'fazendaOasisState_v2';
+        const HISTORY_INTERVAL_MS = 30000;
+
+        function buildCurrentState() {
+            return {
+                title: document.getElementById('input-title').value,
+                week: document.getElementById('input-week').value,
+                date: document.getElementById('input-date').value,
+                footer: document.getElementById('input-footer').value,
+                tasks: JSON.parse(JSON.stringify(tasks)),
+                lastResetWeek: window.lastResetWeek || 0
+            };
+        }
+
+        function saveLocalState(state) {
+            try {
+                localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify(state));
+            } catch (e) {
+                console.warn('Não foi possível salvar no armazenamento local.', e);
+            }
+        }
+
+        function loadLocalState() {
+            try {
+                const raw = localStorage.getItem(LOCAL_STATE_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) {
+                console.warn('Não foi possível carregar o armazenamento local.', e);
+                return null;
+            }
+        }
+
+        async function savePermanentHistory(state, reason = 'alteracao') {
+            if (!db || !userId) return;
+            try {
+                const hash = JSON.stringify(state);
+                const now = Date.now();
+                // Não cria dezenas de versões enquanto o administrador está digitando.
+                if (hash === lastHistoryHash && (now - lastHistorySavedAt) < HISTORY_INTERVAL_MS) return;
+                lastHistoryHash = hash;
+                lastHistorySavedAt = now;
+
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'schedules', 'history'), {
+                    ...state,
+                    savedAt: serverTimestamp(),
+                    savedAtClient: new Date().toISOString(),
+                    savedByRole: currentUserRole || 'sistema',
+                    savedByUserId: userId,
+                    reason
+                });
+            } catch (e) {
+                console.error('Erro ao registrar histórico permanente:', e);
+            }
+        }
 
         /* UTILITÁRIO DE TOAST/NOTIFICAÇÃO SEM UTILIZAR ALERT() */
         window.showToast = function(message, type = 'info') {
@@ -663,22 +720,23 @@
         };
 
         /* FUNÇÃO PARA SALVAR NA NUVEM */
-        window.saveDataToCloud = async function() {
+        window.saveDataToCloud = async function(reason = 'alteracao') {
+            const state = buildCurrentState();
+            // Cópia local garante que atualizar/fechar a página não apague os dados neste aparelho.
+            saveLocalState(state);
+
             if (!db || !userId || !isDataLoaded) return;
             
             clearTimeout(saveTimeout);
+            clearTimeout(historySaveTimeout);
             saveTimeout = setTimeout(async () => {
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
-                    const state = {
-                        title: document.getElementById('input-title').value,
-                        week: document.getElementById('input-week').value,
-                        date: document.getElementById('input-date').value,
-                        footer: document.getElementById('input-footer').value,
-                        tasks: tasks,
-                        lastResetWeek: window.lastResetWeek || 0
-                    };
-                    await setDoc(docRef, state);
+                    await setDoc(docRef, state, { merge: true });
+
+                    // O estado atual fica disponível para todos os perfis/dispositivos.
+                    // O histórico é somente acrescentado; registros anteriores não são sobrescritos.
+                    historySaveTimeout = setTimeout(() => savePermanentHistory(state, reason), 250);
                 } catch (e) {
                     console.error("Erro ao salvar progresso:", e);
                 }
@@ -687,6 +745,23 @@
 
         /* FUNÇÃO PARA CARREGAR DA NUVEM COM ATUALIZAÇÃO EM TEMPO REAL */
         window.loadDataFromCloud = async function() {
+            // Mostra imediatamente o último estado deste aparelho enquanto a nuvem carrega.
+            const localState = loadLocalState();
+            if (localState) {
+                document.getElementById('input-title').value = localState.title || '';
+                document.getElementById('input-week').value = localState.week || '';
+                document.getElementById('input-date').value = localState.date || '';
+                document.getElementById('input-footer').value = localState.footer || '';
+                tasks = Array.isArray(localState.tasks) ? localState.tasks : [];
+                window.lastResetWeek = localState.lastResetWeek || 0;
+                if (currentUserRole) {
+                    window.syncHeaderInputs();
+                    window.updateKPIs();
+                    window.renderEditor();
+                    window.renderTable();
+                }
+            }
+
             if (!db || !userId) return;
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'schedules', 'main_schedule');
@@ -774,7 +849,11 @@
                             }
                         }
                     } else {
-                        if(currentUserRole) window.loadSampleData(); 
+                        // Primeiro acesso: cria o modelo somente uma vez. Depois disso, nunca substitui dados existentes.
+                        const local = loadLocalState();
+                        if (currentUserRole && !local) {
+                            window.loadSampleData();
+                        }
                     }
                 }, (error) => {
                     console.error("Erro no onSnapshot:", error);
@@ -787,6 +866,8 @@
         };
 
         window.logout = function() {
+            // Os dados já foram salvos na nuvem e no armazenamento local; sair não os apaga.
+            try { saveLocalState(buildCurrentState()); } catch(e) {}
             currentUserRole = null;
             try { localStorage.removeItem('fazendaOasisRole'); } catch(e) {}
             document.getElementById('login-screen').classList.remove('hidden');
@@ -794,12 +875,12 @@
         };
 
         /* UPDATE ALL UI */
-        window.updateAll = function(save = true) {
+        window.updateAll = function(save = true, reason = 'alteracao') {
             window.syncHeaderInputs();
             window.updateKPIs();
             window.renderEditor();
             window.renderTable();
-            if (save) window.saveDataToCloud();
+            if (save) window.saveDataToCloud(reason);
         };
 
         /* CABEÇALHOS */
@@ -1004,12 +1085,12 @@
                 block: "SETOR 01",
                 status: "PENDENTE"
             });
-            window.updateAll();
+            window.updateAll(true, 'nova_tarefa');
         };
 
         window.removeTaskRow = function(id) {
             tasks = tasks.filter(t => t.id !== id);
-            window.updateAll();
+            window.updateAll(true, 'exclusao_tarefa');
         };
 
         window.updateTaskField = function(id, field, value) {
@@ -1041,7 +1122,7 @@
                 window.renderEditor();
             }
             
-            window.saveDataToCloud();
+            window.saveDataToCloud('tarefa_alterada');
         };
 
         window.resetStatuses = function() {
